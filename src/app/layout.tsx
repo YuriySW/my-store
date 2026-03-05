@@ -46,13 +46,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light">
           <Providers>
             <CartHydrator />
-            <div className="min-h-screen flex flex-col bg-white">
-              <Header />
-              <div className="flex-grow">
-                {children}
-              </div>
-              <Footer />
-            </div>
+            {children}
           </Providers>
         </ThemeProvider>
       </body>
