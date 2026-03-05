@@ -53,3 +53,22 @@
 2.  Настройте переменные окружения в `.env.local` (Sanity Project ID, Dataset, Redis URL).
 3.  Запустите сервер разработки: `npm run dev`
 4.  Откройте [http://localhost:3000](http://localhost:3000)
+
+## ☁️ Деплой (Vercel)
+
+Проект оптимизирован для развертывания на платформе **Vercel**.
+
+### Настройка переменных окружения
+Для корректной работы на Vercel необходимо добавить следующие переменные в настройках проекта (Settings -> Environment Variables):
+*   `NEXT_PUBLIC_SANITY_PROJECT_ID`: ID вашего проекта в Sanity.
+*   `NEXT_PUBLIC_SANITY_DATASET`: Название датасета (обычно `production`).
+*   `SANITY_API_TOKEN`: Токен доступа Sanity (с правами `editor`).
+*   `UPSTASH_REDIS_REST_URL`: URL вашего Redis хранилища.
+*   `UPSTASH_REDIS_REST_TOKEN`: Токен доступа к Redis.
+
+### Настройка админки (Sanity Studio)
+Админка встроена в проект и доступна по пути `/admin`. Чтобы она работала на домене Vercel:
+1.  Зайдите в [Sanity Management Console](https://manage.sanity.io/).
+2.  Выберите проект и перейдите в **Settings -> API**.
+3.  В разделе **CORS Origins** добавьте URL вашего сайта на Vercel (например, `https://your-project.vercel.app`).
+4.  **Важно**: При добавлении обязательно включите опцию **"Allow credentials"**.
