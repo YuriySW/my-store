@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Link, Divider, Button, useDisclosure } from '@nextui-org/react';
+import NextLink from 'next/link';
 import { Phone, Mail, MapPin, Instagram, Facebook, Youtube } from 'lucide-react';
 import { CallbackModal } from '@/components/UI/CallbackModal';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
@@ -137,12 +138,12 @@ export const Footer = () => {
 
         {/* Нижнее меню */}
         <div className="mt-20 flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm font-light text-gray-300">
-          <Link href="#" className="text-inherit hover:text-white transition-colors">О компании</Link>
-          <Link href="#" className="text-inherit hover:text-white transition-colors">Дизайнерам</Link>
-          <Link href="/news" className="text-inherit hover:text-white transition-colors">Новости</Link>
-          <Link href="/portfolio" className="text-inherit hover:text-white transition-colors">Портфолио</Link>
-          <Link href="/payment" className="text-inherit hover:text-white transition-colors">Оплата</Link>
-          <Link href="/delivery" className="text-inherit hover:text-white transition-colors">Доставка</Link>
+          <NextLink href="/about" className="text-inherit hover:text-white transition-colors">О компании</NextLink>
+          <NextLink href="/designers" className="text-inherit hover:text-white transition-colors">Дизайнерам</NextLink>
+          <NextLink href="/news" className="text-inherit hover:text-white transition-colors">Новости</NextLink>
+          <NextLink href="/portfolio" className="text-inherit hover:text-white transition-colors">Портфолио</NextLink>
+          <NextLink href="/payment" className="text-inherit hover:text-white transition-colors">Оплата</NextLink>
+          <NextLink href="/delivery" className="text-inherit hover:text-white transition-colors">Доставка</NextLink>
         </div>
       </div>
 
