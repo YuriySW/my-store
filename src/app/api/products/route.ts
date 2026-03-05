@@ -2,9 +2,14 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@sanity/client';
 import { Redis } from '@upstash/redis';
 
+export const dynamic = 'force-dynamic';
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'i6jto0ep';
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+
 const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  projectId,
+  dataset,
   useCdn: true,
   apiVersion: '2023-05-03',
 });

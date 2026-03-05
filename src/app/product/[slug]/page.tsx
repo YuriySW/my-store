@@ -4,8 +4,8 @@ import { createClient } from '@sanity/client';
 import ProductClient from './ProductClient';
 
 const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'i6jto0ep',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   useCdn: true,
   apiVersion: '2023-05-03',
 });
