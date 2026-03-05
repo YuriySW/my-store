@@ -2,9 +2,11 @@ import { takeLatest, select } from 'redux-saga/effects';
 import { addToCart, removeFromCart, updateQuantity, clearCart } from '../slices/cartSlice';
 import { RootState } from '../store';
 
-function* persistCartSaga() {
-  const cart = yield select((state: RootState) => state.cart);
-  localStorage.setItem('cart', JSON.stringify(cart));
+function* persistCartSaga(): Generator<any, void, any> {
+  const cart: RootState['cart'] = yield select((state: RootState) => state.cart);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
 }
 
 export function* watchCartSaga() {
