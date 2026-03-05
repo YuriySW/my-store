@@ -10,29 +10,10 @@ interface CartState {
   total: number;
 }
 
-// Загрузка корзины из localStorage при инициализации
-const loadCartFromStorage = (): CartState => {
-  if (typeof window !== 'undefined') {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        const parsed = JSON.parse(savedCart);
-        return {
-          items: parsed.items || [],
-          total: parsed.total || 0,
-        };
-      } catch (e) {
-        console.error('Ошибка при загрузке корзины из localStorage:', e);
-      }
-    }
-  }
-  return {
-    items: [],
-    total: 0,
-  };
+const initialState: CartState = {
+  items: [],
+  total: 0,
 };
-
-const initialState: CartState = loadCartFromStorage();
 
 const cartSlice = createSlice({
   name: 'cart',

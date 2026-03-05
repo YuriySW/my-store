@@ -280,7 +280,7 @@ export const Header = () => {
                           </div>
                         ))}
                         <div 
-                          onClick={() => handleCategoryClick('shop')}
+                          onClick={() => { setIsMenuOpen(false); router.push('/shop'); }}
                           className="text-lg font-bold text-red-600 cursor-pointer"
                         >
                           Все категории

@@ -25,6 +25,8 @@ const raleway = Raleway({
 
 import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
+import { CartHydrator } from "@/components/Cart/CartHydrator";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Fireline - Биокамины премиум качества",
@@ -41,15 +43,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${openSans.variable} ${raleway.variable} antialiased font-sans`}
       >
-        <Providers>
-          <div className="min-h-screen flex flex-col bg-white">
-            <Header />
-            <div className="flex-grow">
-              {children}
+        <ThemeProvider attribute="class" defaultTheme="light">
+          <Providers>
+            <CartHydrator />
+            <div className="min-h-screen flex flex-col bg-white">
+              <Header />
+              <div className="flex-grow">
+                {children}
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
-        </Providers>
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

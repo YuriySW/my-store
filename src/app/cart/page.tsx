@@ -71,7 +71,7 @@ export default function CartPage() {
                       <Plus size={14} />
                     </Button>
                   </div>
-                  <Button isIconOnly color="danger" variant="light" onPress={() => handleRemove(item.id)}>
+                  <Button isIconOnly color="danger" variant="light" onPress={() => handleRemove(item.id)} className="text-gray-500">
                     <Trash2 size={16} />
                   </Button>
                 </div>
@@ -91,7 +91,7 @@ export default function CartPage() {
             </div>
             <div className="flex justify-between mb-3 lg:mb-4">
               <span className="text-gray-500 text-sm lg:text-base">Доставка</span>
-              <span className="text-success font-medium text-sm lg:text-base">Бесплатно</span>
+              <span className="text-black font-medium text-sm lg:text-base">Бесплатно</span>
             </div>
             <Divider className="my-3 lg:my-4 bg-divider" />
             <div className="flex justify-between mb-6 lg:mb-8">

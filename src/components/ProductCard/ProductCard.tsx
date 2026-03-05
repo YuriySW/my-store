@@ -63,14 +63,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </p>
           
           <Button
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
+            onPress={() => {
               if (!isInCart) {
                 dispatch(addToCart(product));
               }
             }}
             isDisabled={isInCart}
-            className={`w-full rounded-lg h-[45px] text-[12px] font-bold uppercase tracking-[0.1em] transition-all duration-300 flex items-center justify-center gap-2 ${
+            className={`w-full rounded-lg h-[45px] sm:h-[59px] px-4 text-[12px] font-bold uppercase tracking-[0.1em] transition-all duration-300 flex items-center justify-center gap-2 ${
               isInCart 
                 ? "bg-gray-200 text-gray-500 cursor-default" 
                 : "bg-black text-white hover:bg-red-600"
