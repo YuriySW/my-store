@@ -16,6 +16,7 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isMobileCatalogOpen, setIsMobileCatalogOpen] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -69,6 +70,7 @@ export const Header = () => {
 
   const handleCategoryClick = (slug: string) => {
     setIsCatalogOpen(false);
+    setIsMobileCatalogOpen(false);
     setIsMenuOpen(false);
     router.push(`/category/${slug}`);
   };
@@ -257,20 +259,16 @@ export const Header = () => {
                   <>
                     <div 
                       className="flex justify-between items-center border-b border-divider pb-4 cursor-pointer select-none"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsCatalogOpen(!isCatalogOpen);
-                      }}
+                      onClick={() => setIsMobileCatalogOpen(!isMobileCatalogOpen)}
                     >
                       <span className="text-xl font-medium text-[#333]">
                         {item.name}
                       </span>
                       <div className="p-2 bg-gray-50 rounded-full">
-                        <ChevronRight size={20} className={`transition-transform text-[#333] ${isCatalogOpen ? 'rotate-90' : ''}`} />
+                        <ChevronRight size={20} className={`transition-transform text-[#333] ${isMobileCatalogOpen ? 'rotate-90' : ''}`} />
                       </div>
                     </div>
-                    {isCatalogOpen && (
+                    {isMobileCatalogOpen && (
                       <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-200">
                         {categories.map((cat) => (
                           <div 
