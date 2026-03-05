@@ -62,12 +62,14 @@ export const Header = () => {
 
   const handleResultClick = (slug: string) => {
     setIsSearchOpen(false);
+    setIsMenuOpen(false);
     setSearchQuery('');
     router.push(`/product/${slug}`);
   };
 
   const handleCategoryClick = (slug: string) => {
     setIsCatalogOpen(false);
+    setIsMenuOpen(false);
     router.push(`/category/${slug}`);
   };
 
@@ -105,8 +107,8 @@ export const Header = () => {
           </div>
           
           <div className="flex items-center gap-4 md:gap-6">
-            {/* Поиск */}
-            <div className="relative flex items-center">
+            {/* Поиск (Desktop) */}
+            <div className="hidden md:relative md:flex items-center">
               {isSearchOpen ? (
                 <div className="absolute right-0 flex items-center animate-in slide-in-from-right-4 duration-300 z-50">
                   <Input
@@ -114,7 +116,7 @@ export const Header = () => {
                     placeholder="Поиск камина..."
                     size="sm"
                     variant="bordered"
-                    className="w-[200px] md:w-[300px] bg-white"
+                    className="w-[300px] bg-white"
                     value={searchQuery}
                     onValueChange={setSearchQuery}
                     classNames={{
@@ -131,28 +133,15 @@ export const Header = () => {
                   <Search size={24} strokeWidth={1.5} />
                 </button>
               )}
-
-              {/* Результаты поиска */}
-              {isSearchOpen && searchResults.length > 0 && (
-                <div className="absolute top-full right-0 mt-2 w-[300px] md:w-[400px] bg-white shadow-2xl border border-divider rounded-xl overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
-                  {searchResults.map((product) => (
-                    <div 
-                      key={product.id}
-                      onClick={() => handleResultClick(product.slug)}
-                      className="flex items-center gap-4 p-3 hover:bg-gray-50 cursor-pointer border-b border-divider last:border-none transition-colors"
-                    >
-                      <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0 overflow-hidden">
-                        <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#333] line-clamp-1">{product.name}</span>
-                        <span className="text-xs text-red-600 font-medium">{product.price.toLocaleString('ru-RU')} ₽</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
+
+            {/* Поиск (Mobile Toggle) */}
+            <button 
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="md:hidden text-[#333] hover:text-red-600 transition-colors"
+            >
+              {isSearchOpen ? <X size={24} /> : <Search size={24} strokeWidth={1.5} />}
+            </button>
 
             <NextLink href="/cart" className="relative text-[#333] hover:text-red-600 transition-colors">
               <ShoppingCart size={24} strokeWidth={1.5} />
@@ -165,6 +154,46 @@ export const Header = () => {
           </div>
         </div>
 
+        {/* Mobile Search Bar (Below Logo) */}
+        {isSearchOpen && (
+          <div className="md:hidden w-full mb-4 animate-in slide-in-from-top-2 duration-300">
+            <Input
+              autoFocus
+              placeholder="Поиск камина..."
+              size="md"
+              variant="bordered"
+              className="w-full bg-white"
+              value={searchQuery}
+              onValueChange={setSearchQuery}
+              classNames={{
+                input: "text-[#333] font-['Open_Sans']",
+                inputWrapper: "border-divider focus-within:!border-[#333]",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Результаты поиска (Shared) */}
+        {isSearchOpen && searchResults.length > 0 && (
+          <div className="absolute top-full left-4 right-4 md:left-auto md:right-0 mt-2 md:w-[400px] bg-white shadow-2xl border border-divider rounded-xl overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
+            {searchResults.map((product) => (
+              <div 
+                key={product.id}
+                onClick={() => handleResultClick(product.slug)}
+                className="flex items-center gap-4 p-3 hover:bg-gray-50 cursor-pointer border-b border-divider last:border-none transition-colors"
+              >
+                <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0 overflow-hidden">
+                  <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-[#333] line-clamp-1">{product.name}</span>
+                  <span className="text-xs text-red-600 font-medium">{product.price.toLocaleString('ru-RU')} ₽</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Bottom Row: Menu and Phone (Desktop only) */}
         <div className="hidden md:flex justify-between items-center relative">
           <nav className="flex gap-6 lg:gap-10">
@@ -173,7 +202,7 @@ export const Header = () => {
                 {item.hasDropdown ? (
                   <button 
                     onClick={() => setIsCatalogOpen(!isCatalogOpen)}
-                    className="text-[13px] font-normal text-[#333] hover:text-red-600 transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-red-600 after:transition-all hover:after:w-full"
+                    className="text-[13px] font-normal text-[#333] hover:text-red-600 transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-red-600 after:transition-all hover:after:w-full cursor-pointer"
                   >
                     {item.name}
                   </button>
@@ -244,28 +273,20 @@ export const Header = () => {
                     {isCatalogOpen && (
                       <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-200">
                         {categories.map((cat) => (
-                          <NextLink 
+                          <div 
                             key={cat.id} 
-                            href={`/category/${cat.slug}`}
-                            onClick={() => {
-                              setIsMenuOpen(false);
-                              setIsCatalogOpen(false);
-                            }}
-                            className="text-lg text-gray-600 border-b border-gray-100 pb-2"
+                            onClick={() => handleCategoryClick(cat.slug)}
+                            className="text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
                           >
                             {cat.name}
-                          </NextLink>
+                          </div>
                         ))}
-                        <NextLink 
-                          href="/shop"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setIsCatalogOpen(false);
-                          }}
-                          className="text-lg font-bold text-red-600"
+                        <div 
+                          onClick={() => handleCategoryClick('shop')}
+                          className="text-lg font-bold text-red-600 cursor-pointer"
                         >
                           Все категории
-                        </NextLink>
+                        </div>
                       </div>
                     )}
                   </>
