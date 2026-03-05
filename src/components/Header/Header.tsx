@@ -226,20 +226,16 @@ export const Header = () => {
               <div key={item.name} className="flex flex-col gap-4">
                 {item.hasDropdown ? (
                   <>
-                    <div className="flex justify-between items-center border-b border-divider pb-4">
-                      <NextLink 
-                        href="/shop" 
-                        onClick={() => setIsMenuOpen(false)}
-                        className="text-xl font-medium text-[#333]"
-                      >
+                    <div 
+                      className="flex justify-between items-center border-b border-divider pb-4 cursor-pointer"
+                      onClick={() => setIsCatalogOpen(!isCatalogOpen)}
+                    >
+                      <span className="text-xl font-medium text-[#333]">
                         {item.name}
-                      </NextLink>
-                      <button 
-                        onClick={() => setIsCatalogOpen(!isCatalogOpen)}
-                        className="p-2 bg-gray-50 rounded-full"
-                      >
-                        <ChevronRight size={20} className={`transition-transform ${isCatalogOpen ? 'rotate-90' : ''}`} />
-                      </button>
+                      </span>
+                      <div className="p-2 bg-gray-50 rounded-full">
+                        <ChevronRight size={20} className={`transition-transform text-[#333] ${isCatalogOpen ? 'rotate-90' : ''}`} />
+                      </div>
                     </div>
                     {isCatalogOpen && (
                       <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-200">
@@ -251,17 +247,27 @@ export const Header = () => {
                               setIsMenuOpen(false);
                               setIsCatalogOpen(false);
                             }}
-                            className="text-lg text-gray-500 font-normal"
+                            className="text-lg text-gray-600 border-b border-gray-100 pb-2"
                           >
                             {cat.name}
                           </NextLink>
                         ))}
+                        <NextLink 
+                          href="/shop"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setIsCatalogOpen(false);
+                          }}
+                          className="text-lg font-bold text-red-600"
+                        >
+                          Все категории
+                        </NextLink>
                       </div>
                     )}
                   </>
                 ) : (
                   <NextLink 
-                    href={item.href} 
+                    href={item.href}
                     onClick={() => setIsMenuOpen(false)}
                     className="text-xl font-medium text-[#333] border-b border-divider pb-4"
                   >
