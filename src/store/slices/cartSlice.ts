@@ -10,15 +10,38 @@ interface CartState {
   total: number;
 }
 
-const initialState: CartState = {
-  items: [],
-  total: 0,
+// Загрузка корзины из localStorage при инициализации
+const loadCartFromStorage = (): CartState => {
+  if (typeof window !== 'undefined') {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
+        const parsed = JSON.parse(savedCart);
+        return {
+          items: parsed.items || [],
+          total: parsed.total || 0,
+        };
+      } catch (e) {
+        console.error('Ошибка при загрузке корзины из localStorage:', e);
+      }
+    }
+  }
+  return {
+    items: [],
+    total: 0,
+  };
 };
+
+const initialState: CartState = loadCartFromStorage();
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    initCart: (state, action: PayloadAction<CartState>) => {
+      state.items = action.payload.items || [];
+      state.total = action.payload.total || 0;
+    },
     addToCart: (state, action: PayloadAction<Product>) => {
       const existingItem = state.items.find((item) => item.id === action.payload.id);
       if (existingItem) {
@@ -46,5 +69,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart, initCart } = cartSlice.actions;
 export default cartSlice.reducer;

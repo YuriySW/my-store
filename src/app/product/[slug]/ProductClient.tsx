@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, useDisclosure } from '@nextui-org/react';
 import { ShoppingCart, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -117,7 +117,7 @@ export default function ProductClient({ product }: { product: any }) {
           <Button
             onPress={handleAddToCart}
             isDisabled={isInCart}
-            className={`flex-1 rounded-lg h-[55px] text-[13px] font-bold uppercase tracking-[0.15em] transition-all duration-300 group flex items-center justify-center ${
+            className={`flex-1 rounded-lg h-[55px] sm:h-[69px] px-4 text-[13px] font-bold uppercase tracking-[0.15em] transition-all duration-300 group flex items-center justify-center ${
               isInCart 
                 ? "bg-gray-200 text-gray-500 cursor-default" 
                 : "bg-black text-white hover:bg-red-600"
@@ -129,7 +129,7 @@ export default function ProductClient({ product }: { product: any }) {
           <Button
             onPress={onOpen}
             variant="bordered"
-            className="flex-1 border-2 border-black text-black rounded-lg h-[55px] text-[13px] font-bold uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-all duration-300 group flex items-center justify-center"
+            className="flex-1 border-2 border-black text-black rounded-lg h-[55px] sm:h-[69px] px-4 text-[13px] font-bold uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-all duration-300 group flex items-center justify-center"
             startContent={<Phone size={20} className="group-hover:rotate-12 transition-transform" />}
           >
             Заказать звонок
