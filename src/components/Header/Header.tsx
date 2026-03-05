@@ -227,8 +227,12 @@ export const Header = () => {
                 {item.hasDropdown ? (
                   <>
                     <div 
-                      className="flex justify-between items-center border-b border-divider pb-4 cursor-pointer"
-                      onClick={() => setIsCatalogOpen(!isCatalogOpen)}
+                      className="flex justify-between items-center border-b border-divider pb-4 cursor-pointer select-none"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsCatalogOpen(!isCatalogOpen);
+                      }}
                     >
                       <span className="text-xl font-medium text-[#333]">
                         {item.name}
