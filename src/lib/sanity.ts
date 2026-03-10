@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client';
 import type { Product } from '@/types/catalog';
+import type { Category } from '@/types/catalog';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'i6jto0ep';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
@@ -52,7 +53,7 @@ const CATEGORIES_QUERY = `*[_type == "category"] {
   "image": image.asset->url
 }`;
 
-export async function fetchCategories() {
+export async function fetchCategories(): Promise<Category[]> {
   return sanityClient.fetch(CATEGORIES_QUERY);
 }
 

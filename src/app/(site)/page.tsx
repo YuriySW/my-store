@@ -1,17 +1,13 @@
-'use client';
-
-import React from 'react';
 import Link from 'next/link';
 import { AdvantagesSection } from '@/components/UI/AdvantagesSection';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
-import { useCategories } from '@/hooks/useCategories';
+import { fetchCategories } from '@/lib/sanity';
 
-export default function Home() {
-  const { categories } = useCategories();
+export default async function Home() {
+  const categories = await fetchCategories();
 
   return (
     <main className="text-black">
-      {/* Hero Section */}
       <section className="relative w-full bg-white py-10 overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6 flex justify-center items-center">
           <img
@@ -22,7 +18,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Centered Description */}
       <section className="py-10 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <p className="font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[16px] font-normal leading-[1.618] text-[#333]">
@@ -31,10 +26,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Grid */}
       <section className="py-24 max-w-7xl mx-auto px-6 bg-white">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {categories.length > 0 ? categories.map((cat) => (
+          {categories.map((cat) => (
             <Link key={cat.id} href={`/category/${cat.slug}`} className="group">
               <div className="bg-[#f5f5f5] p-8 mb-0 overflow-hidden flex items-center justify-center h-[250px]">
                 <img
@@ -47,9 +41,7 @@ export default function Home() {
                 {cat.name}
               </h3>
             </Link>
-          )) : (
-            <div className="col-span-full text-center text-gray-400">Загрузка категорий...</div>
-          )}
+          ))}
         </div>
       </section>
 
