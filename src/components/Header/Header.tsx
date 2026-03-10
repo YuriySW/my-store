@@ -2,41 +2,42 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart, Search, Phone, Menu, X, ChevronRight } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import { fetchProducts } from '@/store/slices/productsSlice';
 import NextLink from 'next/link';
 import { Input } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
+import { useCategories } from '@/hooks/useCategories';
+import type { Product } from '@/types/catalog';
 
 export const Header = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const products = useSelector((state: RootState) => state.products.items);
+  const { categories } = useCategories();
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isMobileCatalogOpen, setIsMobileCatalogOpen] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const catalogRef = useRef<HTMLDivElement>(null);
 
-  // Загрузка категорий для выпадающего меню
   useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(err => console.error(err));
-  }, []);
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
-  // Логика поиска
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
-      const filtered = products.filter(p => 
+      const filtered = products.filter((p) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase())
       ).slice(0, 5);
       setSearchResults(filtered);
@@ -185,7 +186,7 @@ export const Header = () => {
                 className="flex items-center gap-4 p-3 hover:bg-gray-50 cursor-pointer border-b border-divider last:border-none transition-colors"
               >
                 <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0 overflow-hidden">
-                  <img src={product.images[0]} alt={product.name} className="w-full h-full object-contain" />
+                  <img src={product.images?.[0]} alt={product.name} className="w-full h-full object-contain" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-bold text-[#333] line-clamp-1">{product.name}</span>

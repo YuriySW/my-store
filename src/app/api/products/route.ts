@@ -1,57 +1,35 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@sanity/client';
 import { Redis } from '@upstash/redis';
+import { fetchAllProducts } from '@/lib/sanity';
 
 export const dynamic = 'force-dynamic';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'i6jto0ep';
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
-
-const sanityClient = createClient({
-  projectId,
-  dataset,
-  useCdn: true,
-  apiVersion: '2023-05-03',
-});
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+const hasRedis =
+  !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
+const redis = hasRedis
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    })
+  : null;
 
 export async function GET() {
   try {
-    // 1. Пробуем взять из кэша Redis, если он настроен
-    if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    if (redis) {
       try {
-        const cachedProducts = await redis.get('all_products');
-        if (cachedProducts) {
-          return NextResponse.json(cachedProducts);
+        const cached = await redis.get<string>('all_products');
+        if (cached) {
+          return NextResponse.json(JSON.parse(cached));
         }
-      } catch (redisError) {
-        console.warn('Redis Cache Error:', redisError);
+      } catch (e) {
+        console.warn('Redis Cache Error:', e);
       }
     }
 
-    // 2. Берем из Sanity
-    const query = `*[_type == "product"] {
-      "id": _id,
-      name,
-      "slug": slug.current,
-      price,
-      description,
-      details,
-      "images": images[].asset->url,
-      "category": category->name,
-      "categorySlug": category->slug.current,
-      characteristics
-    }`;
-    
-    const products = await sanityClient.fetch(query);
+    const products = await fetchAllProducts();
 
-    // 3. Сохраняем в кэш, если Redis настроен
-    if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-      await redis.set('all_products', products, { ex: 3600 });
+    if (redis) {
+      await redis.set('all_products', JSON.stringify(products), { ex: 3600 });
     }
 
     return NextResponse.json(products);

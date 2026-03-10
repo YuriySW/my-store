@@ -29,9 +29,21 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
 
   const handleSubmit = async () => {
     setStatus('loading');
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, productName }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Ошибка отправки');
+      }
       setStatus('success');
-    }, 1500);
+    } catch (e) {
+      setStatus('idle');
+      console.error(e);
+    }
   };
 
   const handleClose = (onClose: () => void) => {

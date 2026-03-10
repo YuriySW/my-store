@@ -1,20 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@nextui-org/react';
 import Link from 'next/link';
 import { AdvantagesSection } from '@/components/UI/AdvantagesSection';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
+import { useCategories } from '@/hooks/useCategories';
 
 export default function Home() {
-  const [categories, setCategories] = React.useState<any[]>([]);
-
-  React.useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(err => console.error(err));
-  }, []);
+  const { categories } = useCategories();
 
   return (
     <main className="text-black">

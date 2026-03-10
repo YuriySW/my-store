@@ -4,13 +4,13 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   // Проверяем только пути, начинающиеся с /admin
   if (request.nextUrl.pathname.startsWith('/admin')) {
+    const ADMIN_USER = process.env.ADMIN_USER;
+    const ADMIN_PASS = process.env.ADMIN_PASS;
+    if (!ADMIN_USER || !ADMIN_PASS) {
+      return new NextResponse('Admin auth not configured', { status: 503 });
+    }
+
     const authHeader = request.headers.get('authorization');
-
-    // Логин и пароль, которые мы будем использовать
-    // В идеале их нужно вынести в .env (ADMIN_USER и ADMIN_PASS)
-    const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-    const ADMIN_PASS = process.env.ADMIN_PASS || 'fireline2025';
-
     if (!authHeader) {
       return new NextResponse('Authentication required', {
         status: 401,

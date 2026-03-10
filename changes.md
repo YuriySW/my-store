@@ -1,5 +1,21 @@
 # Ключевые изменения
 
+## Рефакторинг (март 2025)
+
+- **State**: Redux Saga удалён. Загрузка товаров — через RTK `createAsyncThunk`; сохранение корзины в localStorage — через кастомный middleware вместо saga.
+- **Типы**: Общие типы вынесены в `src/types/catalog.ts` (Category, Product). Убраны `any`, типизированы пропсы и API.
+- **Категории**: Хук `useCategories()` с кэшем; используется на главной, в магазине и в Header. API категорий переведён на `lib/sanity`.
+- **Sanity**: Единый клиент и запросы в `src/lib/sanity.ts` (fetchAllProducts, fetchProductsByCategorySlug, fetchCategories, getProductBySlug, getProductMeta). API routes и страницы используют его.
+- **Страница категории**: Серверный рендер, данные из Sanity (без Redux). Страница товара — через getProductBySlug/getProductMeta.
+- **API products**: Redis создаётся только при наличии env; кэш в Redis через JSON.stringify/parse.
+- **Sitemap**: baseUrl из переменной `NEXT_PUBLIC_SITE_URL`.
+- **Админка (/admin)**: Basic Auth без дефолтных логина/пароля в коде. Учётные данные задаются только через `ADMIN_USER` и `ADMIN_PASS` в `.env.local` (или на проде в env). При отсутствии переменных — ответ 503.
+- **Callback**: Добавлен `POST /api/callback`; форма в CallbackModal отправляет запрос на API (далее можно подключить почту/CRM).
+- **Удалено**: authSlice, lib/supabase.ts, productsSaga, cartSaga, rootSaga. Store — только products и cart.
+- **Мелкие правки**: ProductCard — stopPropagation на кнопке «В корзину»; Cart — ключ по item.id; ProductClient и поиск в Header — типизация и нормализация id.
+
+---
+
 - Добавлена настройка `preview` в схему `category.ts` для корректного отображения названий категорий в Sanity Studio.
 - Добавлена настройка `preview` в схему `product.ts` для отображения названия, цены, категории и изображения товара в списке админки.
 - Исправлено дублирование Header и Footer на всех страницах (удалены локальные импорты в пользу глобальных в layout.tsx).

@@ -1,25 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Spinner } from '@nextui-org/react';
 import Link from 'next/link';
+import { useCategories } from '@/hooks/useCategories';
 
 export default function ShopPage() {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => {
-        setCategories(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+  const { categories, loading } = useCategories();
 
   return (
     <main className="max-w-7xl mx-auto w-full px-6 py-12">

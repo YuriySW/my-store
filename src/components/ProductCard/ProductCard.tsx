@@ -6,8 +6,8 @@ import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { addToCart } from '@/store/slices/cartSlice';
-import { Product } from '@/store/slices/productsSlice';
 import { RootState } from '@/store/store';
+import type { Product } from '@/types/catalog';
 import { ShoppingCart } from 'lucide-react';
 
 interface ProductCardProps {
@@ -63,6 +63,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </p>
           
           <Button
+            onClick={(e) => e.stopPropagation()}
             onPress={() => {
               if (!isInCart) {
                 dispatch(addToCart(product));

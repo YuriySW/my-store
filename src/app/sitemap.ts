@@ -1,32 +1,26 @@
 import { MetadataRoute } from 'next';
-import { createClient } from '@sanity/client';
-
-const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'i6jto0ep',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  useCdn: true,
-  apiVersion: '2023-05-03',
-});
+import { sanityClient } from '@/lib/sanity';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'http://localhost:3000'; // Замените на ваш домен при деплое
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
-  // Получаем все товары
-  const productsQuery = `*[_type == "product"] { "slug": slug.current, _updatedAt }`;
-  const products = await sanityClient.fetch(productsQuery);
+  const [products, categories] = await Promise.all([
+    sanityClient.fetch<{ slug: string; _updatedAt: string }[]>(
+      `*[_type == "product"] { "slug": slug.current, _updatedAt }`
+    ),
+    sanityClient.fetch<{ slug: string; _updatedAt: string }[]>(
+      `*[_type == "category"] { "slug": slug.current, _updatedAt }`
+    ),
+  ]);
 
-  // Получаем все категории
-  const categoriesQuery = `*[_type == "category"] { "slug": slug.current, _updatedAt }`;
-  const categories = await sanityClient.fetch(categoriesQuery);
-
-  const productUrls = products.map((p: any) => ({
+  const productUrls = products.map((p) => ({
     url: `${baseUrl}/product/${p.slug}`,
-    lastModified: p._updatedAt,
+    lastModified: p._updatedAt ? new Date(p._updatedAt) : new Date(),
   }));
 
-  const categoryUrls = categories.map((c: any) => ({
+  const categoryUrls = categories.map((c) => ({
     url: `${baseUrl}/category/${c.slug}`,
-    lastModified: c._updatedAt,
+    lastModified: c._updatedAt ? new Date(c._updatedAt) : new Date(),
   }));
 
   return [

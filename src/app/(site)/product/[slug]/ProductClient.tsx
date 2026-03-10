@@ -8,21 +8,24 @@ import { addToCart } from '@/store/slices/cartSlice';
 import { CallbackModal } from '@/components/UI/CallbackModal';
 import { RootState } from '@/store/store';
 import Link from 'next/link';
+import type { Product } from '@/types/catalog';
 
-export default function ProductClient({ product }: { product: any }) {
+interface ProductClientProps {
+  product: Product & { _id?: string };
+}
+
+export default function ProductClient({ product }: ProductClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'description' | 'details'>('description');
   const dispatch = useDispatch();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const isInCart = cartItems.some(item => item.id === product.id || item.id === product._id);
+  const productId = product._id ?? product.id;
+  const isInCart = cartItems.some((item) => item.id === productId);
 
   const handleAddToCart = () => {
-    dispatch(addToCart({
-      ...product,
-      id: product._id || product.id
-    }));
+    dispatch(addToCart({ ...product, id: productId }));
   };
 
   const nextImage = () => {

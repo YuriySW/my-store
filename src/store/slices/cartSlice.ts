@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from './productsSlice';
+import type { Product } from '@/types/catalog';
 
 export interface CartItem extends Product {
   quantity: number;

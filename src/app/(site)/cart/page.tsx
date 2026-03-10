@@ -47,8 +47,8 @@ export default function CartPage() {
       <h1 className="text-2xl sm:text-4xl font-bold mb-6 sm:mb-10 uppercase tracking-tighter text-black">Корзина</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
         <div className="lg:col-span-2 flex flex-col gap-4 lg:gap-6">
-          {items.map((item, index) => (
-            <Card key={item.id || index} shadow="sm" className="bg-white border border-divider">
+          {items.map((item) => (
+            <Card key={item.id} shadow="sm" className="bg-white border border-divider">
               <CardBody className="flex flex-row gap-4 lg:gap-6 p-3 lg:p-4 items-center">
                 <div className="w-20 h-20 lg:w-[120px] lg:h-[120px] bg-[#f5f5f5] rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                   <img
