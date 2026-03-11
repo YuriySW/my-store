@@ -3,6 +3,8 @@ import { AdvantagesSection } from '@/components/UI/AdvantagesSection';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
 import { fetchCategories } from '@/lib/sanity';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const categories = await fetchCategories();
 
