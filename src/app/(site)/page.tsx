@@ -27,7 +27,7 @@ export default async function Home() {
               style={{ maxWidth: 'clamp(8.75rem, 35vw, 28rem)' }}
             >
               <p
-                className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight"
+                className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase"
                 style={{ fontSize: 'clamp(0.8125rem, 1.8vw + 0.5rem, 1.875rem)' }}
               >
                 Премиальные камины по адекватным ценам
