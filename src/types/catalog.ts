@@ -3,6 +3,7 @@ export interface Category {
   name: string;
   slug: string;
   image?: string;
+  subcategories?: Category[];
 }
 
 export interface Product {

@@ -224,13 +224,23 @@ export const Header = () => {
                   <div className="absolute top-full left-0 mt-4 w-[250px] bg-[#333] shadow-xl z-[100] animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="flex flex-col py-0">
                       {categories.map((cat) => (
-                        <button
-                          key={cat.id}
-                          onClick={() => handleCategoryClick(cat.slug)}
-                          className="px-[5px] py-[5px] text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans']"
-                        >
-                          {cat.name}
-                        </button>
+                        <div key={cat.id}>
+                          <button
+                            onClick={() => handleCategoryClick(cat.slug)}
+                            className="px-[5px] py-[5px] text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans'] w-full"
+                          >
+                            {cat.name}
+                          </button>
+                          {cat.subcategories?.map((sub) => (
+                            <button
+                              key={sub.id}
+                              onClick={() => handleCategoryClick(sub.slug)}
+                              className="pl-4 pr-[5px] py-[3px] text-left text-white/90 text-[12px] hover:bg-red-600 transition-colors font-['Open_Sans'] w-full"
+                            >
+                              {sub.name}
+                            </button>
+                          ))}
+                        </div>
                       ))}
                       <NextLink 
                         href="/shop" 
@@ -273,12 +283,22 @@ export const Header = () => {
                     {isMobileCatalogOpen && (
                       <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-200">
                         {categories.map((cat) => (
-                          <div 
-                            key={cat.id} 
-                            onClick={() => handleCategoryClick(cat.slug)}
-                            className="text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
-                          >
-                            {cat.name}
+                          <div key={cat.id}>
+                            <div
+                              onClick={() => handleCategoryClick(cat.slug)}
+                              className="text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
+                            >
+                              {cat.name}
+                            </div>
+                            {cat.subcategories?.map((sub) => (
+                              <div
+                                key={sub.id}
+                                onClick={() => handleCategoryClick(sub.slug)}
+                                className="text-base text-gray-500 pl-4 border-b border-gray-50 pb-2 cursor-pointer"
+                              >
+                                {sub.name}
+                              </div>
+                            ))}
                           </div>
                         ))}
                         <div 

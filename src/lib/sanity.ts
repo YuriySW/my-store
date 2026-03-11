@@ -46,11 +46,17 @@ export async function fetchProductsByCategorySlug(slug: string): Promise<Product
   return sanityClient.fetch(PRODUCTS_BY_CATEGORY_QUERY, { slug });
 }
 
-const CATEGORIES_QUERY = `*[_type == "category"] {
+const CATEGORIES_QUERY = `*[_type == "category" && !(_id in *[_type == "category"].subcategories[]._ref)] {
   "id": _id,
   name,
   "slug": slug.current,
-  "image": image.asset->url
+  "image": image.asset->url,
+  "subcategories": subcategories[]->{
+    "id": _id,
+    name,
+    "slug": slug.current,
+    "image": image.asset->url
+  }
 }`;
 
 export async function fetchCategories(): Promise<Category[]> {

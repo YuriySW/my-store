@@ -29,6 +29,22 @@ export default defineType({
         hotspot: true,
       },
     }),
+    defineField({
+      name: 'subcategories',
+      title: 'Подкатегории',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'category' }],
+          options: {
+            filter: ({ document }) =>
+              `_id != "${document?._id ?? ''}"`,
+          },
+        },
+      ],
+      description: 'Категории, вложенные в эту. Не выбирайте эту же категорию.',
+    }),
   ],
   preview: {
     select: {
