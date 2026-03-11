@@ -81,6 +81,7 @@ export const Header = () => {
     { name: 'Портфолио', href: '/portfolio' },
     { name: 'Новости', href: '/news' },
     { name: 'Оплата', href: '/payment' },
+    { name: 'Гарантия', href: '/warranty' },
     { name: 'Доставка', href: '/delivery' },
     { name: 'Контакты', href: '/contacts' },
   ];

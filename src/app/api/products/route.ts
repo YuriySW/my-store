@@ -17,12 +17,22 @@ export async function GET() {
   try {
     if (redis) {
       try {
-        const cached = await redis.get<string>('all_products');
-        if (cached) {
-          return NextResponse.json(JSON.parse(cached));
+        const cached = await redis.get<unknown>('all_products');
+        if (cached != null) {
+          // Старый кэш мог быть записан как объект (не строка). Поддерживаем оба варианта.
+          if (typeof cached === 'string') {
+            return NextResponse.json(JSON.parse(cached));
+          }
+          return NextResponse.json(cached);
         }
       } catch (e) {
         console.warn('Redis Cache Error:', e);
+        // Пытаемся самовосстановиться: удаляем битый кэш
+        try {
+          await redis.del('all_products');
+        } catch {
+          // ignore
+        }
       }
     }
 
