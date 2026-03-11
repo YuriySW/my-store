@@ -1,21 +1,21 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart, Search, Phone, Menu, X, ChevronRight } from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@/store/store';
-import { fetchProducts } from '@/store/slices/productsSlice';
+import React, {useState, useEffect, useRef} from 'react';
+import {ShoppingCart, Search, Phone, Menu, X, ChevronRight} from 'lucide-react';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootState, AppDispatch} from '@/store/store';
+import {fetchProducts} from '@/store/slices/productsSlice';
 import NextLink from 'next/link';
-import { Input } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import { useCategories } from '@/hooks/useCategories';
-import type { Product } from '@/types/catalog';
+import {Input} from '@nextui-org/react';
+import {useRouter} from 'next/navigation';
+import {useCategories} from '@/hooks/useCategories';
+import type {Product} from '@/types/catalog';
 
 export const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const products = useSelector((state: RootState) => state.products.items);
-  const { categories } = useCategories();
+  const {categories} = useCategories();
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,9 +37,9 @@ export const Header = () => {
 
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
-      const filtered = products.filter((p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5);
+      const filtered = products
+        .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        .slice(0, 5);
       setSearchResults(filtered);
     } else {
       setSearchResults([]);
@@ -77,13 +77,13 @@ export const Header = () => {
   };
 
   const menuItems = [
-    { name: 'Каталог', href: '/shop', hasDropdown: true },
-    { name: 'Портфолио', href: '/portfolio' },
-    { name: 'Новости', href: '/news' },
-    { name: 'Оплата', href: '/payment' },
-    { name: 'Гарантия', href: '/warranty' },
-    { name: 'Доставка', href: '/delivery' },
-    { name: 'Контакты', href: '/contacts' },
+    {name: 'Каталог', href: '/shop', hasDropdown: true},
+    {name: 'Портфолио', href: '/portfolio'},
+    {name: 'Новости', href: '/news'},
+    {name: 'Оплата', href: '/payment'},
+    {name: 'Гарантия', href: '/warranty'},
+    {name: 'Доставка', href: '/delivery'},
+    {name: 'Контакты', href: '/contacts'},
   ];
 
   return (
@@ -92,24 +92,21 @@ export const Header = () => {
         {/* Top Row: Logo and Icons */}
         <div className="flex justify-between items-center mb-4 md:mb-8">
           <div className="flex items-center md:hidden">
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-[#333] p-2"
-            >
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-[#333] p-2">
               {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
 
           <div className="flex-1 flex justify-center md:justify-start items-center">
             <NextLink href="/">
-              <img 
-                src="/images/logo.png" 
-                alt="FIRELINE" 
-                className="w-[150px] md:w-[190px] h-auto block" 
+              <img
+                src="/images/logo.png"
+                alt="FIRELINE"
+                className="w-[150px] md:w-[190px] h-auto block"
               />
             </NextLink>
           </div>
-          
+
           <div className="flex items-center gap-4 md:gap-6">
             {/* Поиск (Desktop) */}
             <div className="hidden md:relative md:flex items-center">
@@ -125,12 +122,12 @@ export const Header = () => {
                     onValueChange={setSearchQuery}
                     classNames={{
                       input: "text-[#333] font-['Open_Sans',_Helvetica,_Arial,_sans-serif]",
-                      inputWrapper: "border-[#divider] focus-within:!border-[#333]",
+                      inputWrapper: 'border-[#divider] focus-within:!border-[#333]',
                     }}
                   />
                 </div>
               ) : (
-                <button 
+                <button
                   onClick={() => setIsSearchOpen(true)}
                   className="text-[#333] hover:text-red-600 transition-colors"
                 >
@@ -140,14 +137,17 @@ export const Header = () => {
             </div>
 
             {/* Поиск (Mobile Toggle) */}
-            <button 
+            <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="md:hidden text-[#333] hover:text-red-600 transition-colors"
             >
               {isSearchOpen ? <X size={24} /> : <Search size={24} strokeWidth={1.5} />}
             </button>
 
-            <NextLink href="/cart" className="relative text-[#333] hover:text-red-600 transition-colors">
+            <NextLink
+              href="/cart"
+              className="relative text-[#333] hover:text-red-600 transition-colors"
+            >
               <ShoppingCart size={24} strokeWidth={1.5} />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
@@ -171,7 +171,7 @@ export const Header = () => {
               onValueChange={setSearchQuery}
               classNames={{
                 input: "text-[#333] font-['Open_Sans']",
-                inputWrapper: "border-divider focus-within:!border-[#333]",
+                inputWrapper: 'border-divider focus-within:!border-[#333]',
               }}
             />
           </div>
@@ -181,17 +181,23 @@ export const Header = () => {
         {isSearchOpen && searchResults.length > 0 && (
           <div className="absolute top-full left-4 right-4 md:left-auto md:right-0 mt-2 md:w-[400px] bg-white shadow-2xl border border-divider rounded-xl overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
             {searchResults.map((product) => (
-              <div 
+              <div
                 key={product.id}
                 onClick={() => handleResultClick(product.slug)}
                 className="flex items-center gap-4 p-3 hover:bg-gray-50 cursor-pointer border-b border-divider last:border-none transition-colors"
               >
                 <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0 overflow-hidden">
-                  <img src={product.images?.[0]} alt={product.name} className="w-full h-full object-contain" />
+                  <img
+                    src={product.images?.[0]}
+                    alt={product.name}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-bold text-[#333] line-clamp-1">{product.name}</span>
-                  <span className="text-xs text-red-600 font-medium">{product.price.toLocaleString('ru-RU')} ₽</span>
+                  <span className="text-xs text-red-600 font-medium">
+                    {product.price.toLocaleString('ru-RU')} ₽
+                  </span>
                 </div>
               </div>
             ))}
@@ -202,17 +208,21 @@ export const Header = () => {
         <div className="hidden md:flex justify-between items-center relative">
           <nav className="flex gap-6 lg:gap-10">
             {menuItems.map((item) => (
-              <div key={item.name} className="relative group/item" ref={item.hasDropdown ? catalogRef : null}>
+              <div
+                key={item.name}
+                className="relative group/item"
+                ref={item.hasDropdown ? catalogRef : null}
+              >
                 {item.hasDropdown ? (
-                  <button 
+                  <button
                     onClick={() => setIsCatalogOpen(!isCatalogOpen)}
                     className="text-[13px] font-normal text-[#333] hover:text-red-600 transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-red-600 after:transition-all hover:after:w-full cursor-pointer"
                   >
                     {item.name}
                   </button>
                 ) : (
-                  <NextLink 
-                    href={item.href} 
+                  <NextLink
+                    href={item.href}
                     className="text-[13px] font-normal text-[#333] hover:text-red-600 transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-red-600 after:transition-all hover:after:w-full"
                   >
                     {item.name}
@@ -242,8 +252,8 @@ export const Header = () => {
                           ))}
                         </div>
                       ))}
-                      <NextLink 
-                        href="/shop" 
+                      <NextLink
+                        href="/shop"
                         onClick={() => setIsCatalogOpen(false)}
                         className="px-[5px] py-[5px] text-left text-white text-[13px] font-bold hover:bg-red-600 transition-colors border-t border-white/10 font-['Open_Sans']"
                       >
@@ -258,7 +268,12 @@ export const Header = () => {
 
           <div className="flex items-center gap-2 text-[#333] font-['Open_Sans',_Helvetica,_Arial,_sans-serif]">
             <Phone size={18} strokeWidth={1.5} />
-            <a href="tel:+79122252442" className="text-[15px] font-normal hover:text-red-600 transition-colors">+7 (912) 225 24 42</a>
+            <a
+              href="tel:+79122252442"
+              className="text-[15px] font-normal hover:text-red-600 transition-colors"
+            >
+              +7 (912) 225 24 42
+            </a>
           </div>
         </div>
 
@@ -269,15 +284,16 @@ export const Header = () => {
               <div key={item.name} className="flex flex-col gap-4">
                 {item.hasDropdown ? (
                   <>
-                    <div 
+                    <div
                       className="flex justify-between items-center border-b border-divider pb-4 cursor-pointer select-none"
                       onClick={() => setIsMobileCatalogOpen(!isMobileCatalogOpen)}
                     >
-                      <span className="text-xl font-medium text-[#333]">
-                        {item.name}
-                      </span>
+                      <span className="text-xl font-medium text-[#333]">{item.name}</span>
                       <div className="p-2 bg-gray-50 rounded-full">
-                        <ChevronRight size={20} className={`transition-transform text-[#333] ${isMobileCatalogOpen ? 'rotate-90' : ''}`} />
+                        <ChevronRight
+                          size={20}
+                          className={`transition-transform text-[#333] ${isMobileCatalogOpen ? 'rotate-90' : ''}`}
+                        />
                       </div>
                     </div>
                     {isMobileCatalogOpen && (
@@ -301,8 +317,11 @@ export const Header = () => {
                             ))}
                           </div>
                         ))}
-                        <div 
-                          onClick={() => { setIsMenuOpen(false); router.push('/shop'); }}
+                        <div
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            router.push('/shop');
+                          }}
                           className="text-lg font-bold text-red-600 cursor-pointer"
                         >
                           Все категории
@@ -311,7 +330,7 @@ export const Header = () => {
                     )}
                   </>
                 ) : (
-                  <NextLink 
+                  <NextLink
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
                     className="text-xl font-medium text-[#333] border-b border-divider pb-4"
@@ -323,7 +342,9 @@ export const Header = () => {
             ))}
             <div className="flex items-center gap-4 text-[#333] mt-4">
               <Phone size={24} strokeWidth={1.5} />
-              <a href="tel:+79122252442" className="text-lg font-bold">+7 (912) 225 24 42</a>
+              <a href="tel:+79122252442" className="text-lg font-bold">
+                +7 (912) 225 24 42
+              </a>
             </div>
           </div>
         )}
