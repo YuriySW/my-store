@@ -10,7 +10,7 @@ export default async function CategoryPage({
   const products = await fetchProductsByCategorySlug(slug);
 
   return (
-    <main className="max-w-7xl mx-auto w-full px-6 py-12">
+    <main className="max-w-[1200px] mx-auto w-full px-4 py-12">
       <div className="flex flex-col gap-8">
         <div className="border-b border-divider pb-6">
           <h1 className="text-3xl font-bold uppercase tracking-tighter text-black">

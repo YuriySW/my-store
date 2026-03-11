@@ -32,7 +32,7 @@ export default async function ProductPage({
   }
 
   return (
-    <main className="max-w-7xl mx-auto w-full px-6 py-12 md:py-16">
+    <main className="max-w-[1200px] mx-auto w-full px-4 py-12 md:py-16">
       <ProductClient product={product} />
     </main>
   );

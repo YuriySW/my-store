@@ -7,7 +7,7 @@ import Link from 'next/link';
 export const AdvantagesSection = () => {
   return (
     <section className="py-20 bg-[#f5f5f5]">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 items-center gap-12 lg:gap-20">
+      <div className="max-w-[1200px] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 items-center gap-12 lg:gap-20">
         {/* Левая часть: Изображение */}
         <div className="flex justify-center md:justify-end">
           <img

@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <main className="text-black">
       <section className="relative w-full bg-white py-10 overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6 flex justify-center items-center">
+        <div className="max-w-[1200px] mx-auto px-4 flex justify-center items-center">
           <img
             src="/images/hero-fireplace.jpg"
             alt="Биокамин Fireline"
@@ -19,14 +19,14 @@ export default async function Home() {
       </section>
 
       <section className="py-10 bg-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="max-w-[1200px] mx-auto px-4 text-center">
           <p className="font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[16px] font-normal leading-[1.618] text-[#333]">
             Биокамины Fireline. Производство биокаминов премиум качества по ценам производителя. Изготовление биокаминов на заказ по вашим размерам
           </p>
         </div>
       </section>
 
-      <section className="py-24 max-w-7xl mx-auto px-6 bg-white">
+      <section className="py-24 max-w-[1200px] mx-auto px-4 bg-white">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((cat) => (
             <Link key={cat.id} href={`/category/${cat.slug}`} className="group">

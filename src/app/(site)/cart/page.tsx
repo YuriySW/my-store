@@ -38,7 +38,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 sm:py-12">
+    <main className="max-w-[1200px] mx-auto w-full px-4 py-8 sm:py-12">
       <CallbackModal 
         isOpen={isOpen} 
         onOpenChange={onOpenChange} 

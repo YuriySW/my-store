@@ -5,7 +5,7 @@ export default async function ShopPage() {
   const categories = await fetchCategories();
 
   return (
-    <main className="max-w-7xl mx-auto w-full px-6 py-12">
+    <main className="max-w-[1200px] mx-auto w-full px-4 py-12">
       <div className="flex flex-col gap-12">
         <div className="text-center">
           <h1 className="text-4xl font-bold uppercase tracking-[0.2em] text-black font-['Open_Sans']">Каталог</h1>

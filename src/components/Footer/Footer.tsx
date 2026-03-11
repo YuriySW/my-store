@@ -58,7 +58,7 @@ export const Footer = () => {
         <p className="text-gray-400 mb-12 font-['Open_Sans']">любым удобным способом</p>
         <div className="w-20 h-[1px] bg-gray-600 mb-16"></div>
 
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="flex flex-col items-center gap-4">
             <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
               <Phone size={28} strokeWidth={1.5} />

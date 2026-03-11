@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function DeliveryPage() {
   return (
-    <main className="max-w-7xl mx-auto w-full px-6 py-20">
+    <main className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <h1
         className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333]"
       >
