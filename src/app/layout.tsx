@@ -31,6 +31,9 @@ import { ThemeProvider } from "next-themes";
 export const metadata: Metadata = {
   title: "Fireline - Биокамины премиум качества",
   description: "Производство биокаминов премиум качества по ценам производителя. Изготовление биокаминов на заказ по вашим размерам.",
+  icons: {
+    icon: "/images/favicon.png",
+  },
 };
 
 export default function RootLayout({
