@@ -8,14 +8,12 @@ export default async function Home() {
 
   return (
     <main className="text-black">
-      <section className="relative w-full bg-white py-10 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-4 flex justify-center items-center">
-          <img
-            src="/images/hero-fireplace.jpg"
-            alt="Биокамин Fireline"
-            className="w-full h-auto object-contain scale-110"
-          />
-        </div>
+      <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)]">
+        <img
+          src="/images/hero-fireplace.jpg"
+          alt="Биокамин Fireline"
+          className="w-full min-h-[280px] object-cover object-center"
+        />
       </section>
 
       <section className="py-10 bg-white">
