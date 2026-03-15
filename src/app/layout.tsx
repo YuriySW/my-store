@@ -29,7 +29,7 @@ import { CartHydrator } from "@/components/Cart/CartHydrator";
 import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
-  title: "Fireline - Биокамины премиум качества",
+  title: "Fireline - Камины премиум качества",
   description: "Производство биокаминов премиум качества по ценам производителя. Изготовление биокаминов на заказ по вашим размерам.",
   icons: {
     icon: "/images/favicon.png",
