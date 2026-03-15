@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Link, Divider, Button, useDisclosure } from '@nextui-org/react';
 import NextLink from 'next/link';
 import { Phone, Mail, MapPin, Instagram, Facebook, Youtube } from 'lucide-react';
@@ -8,9 +9,25 @@ import { CallbackModal } from '@/components/UI/CallbackModal';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
 import { AdvantagesSection } from '@/components/UI/AdvantagesSection';
 
+const fadeInDown = {
+  hidden: { opacity: 0, y: -36 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const container = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.18, delayChildren: 0.1 },
+  },
+};
+
+const itemTransition = { duration: 0.6, ease: [0.22, 1, 0.36, 1] };
+
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
 
   const socialLinks = [
     { 
@@ -48,17 +65,30 @@ export const Footer = () => {
       />
       
       {/* Блок контактов */}
-      <div 
+      <div
+        ref={ref}
         className="relative py-20 px-6 flex flex-col items-center text-center bg-cover bg-center"
         style={{
           backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/images/footer-image.png')",
         }}
       >
-        <h2 className="text-4xl font-light mb-2 font-['Open_Sans']">Свяжитесь с нами</h2>
-        <p className="text-gray-400 mb-12 font-['Open_Sans']">любым удобным способом</p>
-        <div className="w-20 h-[1px] bg-gray-600 mb-16"></div>
+        <motion.div
+          className="flex flex-col items-center w-full"
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          variants={container}
+        >
+        <motion.div variants={fadeInDown} transition={itemTransition}>
+          <h2 className="text-4xl font-light mb-2 font-['Open_Sans']">Свяжитесь с нами</h2>
+          <p className="text-gray-400 mb-12 font-['Open_Sans']">любым удобным способом</p>
+        </motion.div>
+        <motion.div className="w-20 h-[1px] bg-gray-600 mb-16" variants={fadeInDown} transition={itemTransition} />
 
-        <div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <motion.div
+          className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-16"
+          variants={fadeInDown}
+          transition={itemTransition}
+        >
           <div className="flex flex-col items-center gap-4">
             <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
               <Phone size={28} strokeWidth={1.5} />
@@ -98,10 +128,10 @@ export const Footer = () => {
               <a href="mailto:domkaminov@mail.ru" className="text-lg font-medium hover:text-red-500 transition-colors">domkaminov@mail.ru</a>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Соцсети и кнопка */}
-        <div className="flex flex-col items-center gap-10">
+        <motion.div className="flex flex-col items-center gap-10" variants={fadeInDown} transition={itemTransition}>
           <div className="flex flex-wrap justify-center gap-6">
             {socialLinks.map((social) => (
               <a 
@@ -134,17 +164,22 @@ export const Footer = () => {
           >
             Обратный звонок
           </Button>
-        </div>
+        </motion.div>
 
         {/* Нижнее меню */}
-        <div className="mt-20 flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm font-light text-gray-300">
+        <motion.div
+          className="mt-20 flex flex-wrap justify-center gap-x-10 gap-y-4 text-sm font-light text-gray-300"
+          variants={fadeInDown}
+          transition={itemTransition}
+        >
           <NextLink href="/about" className="text-inherit hover:text-white transition-colors">О компании</NextLink>
           <NextLink href="/designers" className="text-inherit hover:text-white transition-colors">Дизайнерам</NextLink>
           <NextLink href="/news" className="text-inherit hover:text-white transition-colors">Новости</NextLink>
           <NextLink href="/portfolio" className="text-inherit hover:text-white transition-colors">Портфолио</NextLink>
           <NextLink href="/payment" className="text-inherit hover:text-white transition-colors">Оплата</NextLink>
           <NextLink href="/delivery" className="text-inherit hover:text-white transition-colors">Доставка</NextLink>
-        </div>
+        </motion.div>
+        </motion.div>
       </div>
 
       {/* Копирайт */}

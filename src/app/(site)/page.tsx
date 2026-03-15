@@ -10,16 +10,15 @@ export default async function Home() {
 
   return (
     <main className="text-black">
-      <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[470px]:min-h-[200px]">
+      <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[760px]:min-h-[320px] max-[470px]:min-h-[340px]">
         <img
           src="/images/hero-fireplace.jpg"
           alt="Биокамин Fireline"
           className="w-full min-h-[280px] max-[470px]:min-h-0 max-[470px]:max-h-[200px] object-cover max-[470px]:object-contain object-center md:object-left lg:object-[35%] bg-white"
         />
-        {/* Оверлей справа: пропорциональное масштабирование через clamp */}
+        {/* Оверлей: на узких экранах меньше верхний отступ, чтобы заголовок+подзаголовок+кнопка помещались */}
         <div
-          className="absolute inset-0 z-10 flex items-start pointer-events-none max-[470px]:!pt-6"
-          style={{ paddingTop: 'clamp(5rem, 14vh, 10.25rem)' }}
+          className="absolute inset-0 z-10 flex items-start pointer-events-none pt-[clamp(5rem,14vh,10.25rem)] max-[760px]:pt-16 max-[470px]:pt-4"
         >
           <div className="pointer-events-auto max-w-[1200px] mx-auto w-full px-[clamp(0.75rem,4vw,1.5rem)] flex justify-end box-border">
             <div
@@ -31,6 +30,12 @@ export default async function Home() {
                 style={{ fontSize: 'clamp(0.8125rem, 1.8vw + 0.5rem, 1.875rem)' }}
               >
                 Премиальные камины по адекватным ценам
+              </p>
+              <p
+                className="mt-[clamp(0.375rem,1vw,0.625rem)] font-['Raleway',_sans-serif] text-black/80 leading-snug"
+                style={{ fontSize: 'clamp(0.6875rem, 1vw + 0.4rem, 0.875rem)' }}
+              >
+                Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт характер и создаёт особую атмосферу в любом интерьере.
               </p>
               <Link
                 href="/shop"
@@ -47,7 +52,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-10 bg-white">
+      <section className="py-10 max-[468px]:pt-4 max-[468px]:pb-6 bg-white">
         <div className="max-w-[1200px] mx-auto px-4 text-center">
           <p className="font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[16px] font-normal leading-[1.618] text-[#333]">
             Биокамины Fireline. Производство биокаминов премиум качества по ценам производителя. Изготовление биокаминов на заказ по вашим размерам
