@@ -1,7 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
+
+const slideInLeft = {
+  hidden: { opacity: 0, x: '-50vw' },
+  visible: { opacity: 1, x: 0 },
+};
+const slideInRight = {
+  hidden: { opacity: 0, x: '50vw' },
+  visible: { opacity: 1, x: 0 },
+};
+const container = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.35, delayChildren: 0.08 } },
+};
+const transition = { duration: 1.15, ease: [0.22, 1, 0.36, 1] as const };
 
 const paymentMethods = [
   {
@@ -37,10 +52,13 @@ const paymentMethods = [
 ];
 
 export default function PaymentPage() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   return (
-    <main className="max-w-[1200px] mx-auto w-full px-4 py-20">
+    <main className="w-full bg-[#f5f5f5] min-h-screen">
+      <div className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <h1
-        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333]"
+        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
       >
         Условия оплаты
       </h1>
@@ -58,13 +76,21 @@ export default function PaymentPage() {
         возврата денежных средств.
       </p>
 
-      <section className="space-y-16 max-w-4xl mx-auto">
+      <motion.section
+        ref={sectionRef}
+        className="space-y-16 max-w-4xl mx-auto"
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        variants={container}
+      >
         {paymentMethods.map((item, index) => (
-          <article
+          <motion.article
             key={item.number}
             className={`flex flex-col md:flex-row items-center gap-8 ${
               index % 2 === 1 ? 'md:flex-row-reverse' : ''
             }`}
+            variants={index % 2 === 0 ? slideInLeft : slideInRight}
+            transition={transition}
           >
             <div className="relative w-[160px] h-[160px] shrink-0 rounded-full overflow-hidden bg-gray-100 self-center">
               <Image
@@ -79,19 +105,19 @@ export default function PaymentPage() {
               <h3 className="text-[20px] font-semibold text-[#333] mb-2 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
                 {item.title}.
               </h3>
-              <p className="text-gray-600 text-[13px] leading-relaxed">
+              <p className="text-gray-600 text-[13px] leading-relaxed text-justify">
                 {item.text}
               </p>
             </div>
-          </article>
+          </motion.article>
         ))}
-      </section>
+      </motion.section>
 
       <section className="mt-20 space-y-6 max-w-4xl mx-auto text-center">
         <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
           Оплата под заказ
         </h2>
-        <div className="space-y-4 text-gray-600 text-[13px] leading-relaxed max-w-3xl mx-auto">
+        <div className="space-y-4 text-gray-600 text-[13px] leading-relaxed max-w-3xl mx-auto text-justify">
           <p>
             В нашем Интернет-магазине огромное количество продукции и держать в
             наличии такое большое количество дорогостоящего товара не сможет ни
@@ -127,7 +153,7 @@ export default function PaymentPage() {
         <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
           Гарантии нашего сотрудничества
         </h2>
-        <div className="space-y-6 max-w-3xl mx-auto text-left text-gray-600 text-[13px] leading-relaxed">
+        <div className="space-y-6 max-w-3xl mx-auto text-justify text-gray-600 text-[13px] leading-relaxed">
           <div>
             <h3 className="text-[18px] font-semibold text-[#333] mb-2 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
               Фирменная гарантия производителя
@@ -174,7 +200,7 @@ export default function PaymentPage() {
         <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
           Возврат денежных средств
         </h2>
-        <p className="text-gray-600 text-[13px] leading-relaxed max-w-3xl mx-auto">
+        <p className="text-gray-600 text-[13px] leading-relaxed max-w-3xl mx-auto text-justify">
           Мы без проблем примем обратно проданный нами товар при условии, что
           возврат происходит в установленный законом срок, он не является
           электротехнически сложным прибором (входит в перечень товаров,
@@ -196,7 +222,7 @@ export default function PaymentPage() {
         <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
           Порядок возврата денежных средств
         </h2>
-        <p className="text-gray-600 text-[13px] leading-relaxed max-w-3xl mx-auto">
+        <p className="text-gray-600 text-[13px] leading-relaxed max-w-3xl mx-auto text-justify">
           Для полного или частичного возврата денежных средств на карту вам
           необходимо обратиться в магазин. Деньги автоматически вернутся на вашу
           карту в течение 2–3 дней. Точный срок возврата денежных средств
@@ -213,6 +239,7 @@ export default function PaymentPage() {
           безопасность сделок с банковскими картами.
         </p>
       </section>
+      </div>
     </main>
   );
 }

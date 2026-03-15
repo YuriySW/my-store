@@ -7,7 +7,7 @@ import {RootState, AppDispatch} from '@/store/store';
 import {fetchProducts} from '@/store/slices/productsSlice';
 import NextLink from 'next/link';
 import {Input} from '@nextui-org/react';
-import {useRouter} from 'next/navigation';
+import {useRouter, usePathname} from 'next/navigation';
 import {useCategories} from '@/hooks/useCategories';
 import type {Product} from '@/types/catalog';
 
@@ -26,6 +26,7 @@ export const Header = () => {
   const [searchResults, setSearchResults] = useState<Product[]>([]);
 
   const router = useRouter();
+  const pathname = usePathname();
   const searchRef = useRef<HTMLDivElement>(null);
   const catalogRef = useRef<HTMLDivElement>(null);
 
@@ -223,7 +224,11 @@ export const Header = () => {
                 ) : (
                   <NextLink
                     href={item.href}
-                    className="text-[13px] font-normal text-[#333] hover:text-red-600 transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-red-600 after:transition-all hover:after:w-full"
+                    className={`text-[13px] font-normal transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-red-600 after:transition-all ${
+                      pathname === item.href
+                        ? 'text-red-600 after:w-full'
+                        : 'text-[#333] after:w-0 hover:text-red-600 hover:after:w-full'
+                    }`}
                   >
                     {item.name}
                   </NextLink>
@@ -333,7 +338,7 @@ export const Header = () => {
                   <NextLink
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-xl font-medium text-[#333] border-b border-divider pb-4"
+                    className={`text-xl font-medium border-b border-divider pb-4 ${pathname === item.href ? 'text-red-600' : 'text-[#333]'}`}
                   >
                     {item.name}
                   </NextLink>
