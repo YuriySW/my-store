@@ -9,13 +9,14 @@ const YANDEX_MAP_EMBED_URL =
 
 export default function ContactsPage() {
   return (
-    <main className="max-w-[1200px] mx-auto w-full px-4 py-20">
+    <main className="w-full bg-[#f5f5f5] min-h-screen">
+      <div className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12">
         {/* Левая колонка: текст и контакты */}
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Магазины</h1>
           <p className="text-gray-600 leading-relaxed mb-8">
-            Компания ДомКаминов является официальным представителем завода Астов. Наш основной офис
+            Компания ДомКаминов является эксклюзивным представителем завода Fireline. Наш основной офис
             находится в г. Екатеринбурге. Обязательно приходите к нам на чашку кофе. Совместно
             обсудим ваши проекты и предложим рекомендации! Осуществляем профессиональный монтаж
             теплового оборудования уже более 15 лет.
@@ -81,7 +82,6 @@ export default function ContactsPage() {
                 <div className="text-gray-900 space-y-0.5">
                   <p>Пн-Пт: с 11:00 до 19:00</p>
                   <p>Сб: с 12:00 до 18:00</p>
-                  <p>Вс: выходной</p>
                 </div>
               </div>
             </div>
@@ -100,6 +100,7 @@ export default function ContactsPage() {
           />
         </div>
       </section>
+      </div>
     </main>
   );
 }

@@ -1,13 +1,32 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 
+const slideInLeft = {
+  hidden: { opacity: 0, x: '-50vw' },
+  visible: { opacity: 1, x: 0 },
+};
+const slideInRight = {
+  hidden: { opacity: 0, x: '50vw' },
+  visible: { opacity: 1, x: 0 },
+};
+const container = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.35, delayChildren: 0.08 } },
+};
+const transition = { duration: 1.15, ease: [0.22, 1, 0.36, 1] as const };
+
 export default function DeliveryPage() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   return (
-    <main className="max-w-[1200px] mx-auto w-full px-4 py-20">
+    <main className="w-full min-h-screen">
+      <div className="w-full bg-[#f5f5f5]">
+        <div className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <h1
-        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333]"
+        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
       >
         Условия доставки
       </h1>
@@ -25,8 +44,28 @@ export default function DeliveryPage() {
         Белоруссию.
       </p>
 
-      <section className="space-y-16 max-w-4xl mx-auto">
-        <article className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-8">
+      <div className="flex justify-center mb-12">
+        <Image
+          src="/images/dostavka22.png"
+          alt="Доставка"
+          width={896}
+          height={200}
+          className="w-full max-w-4xl h-auto object-contain"
+        />
+      </div>
+
+      <motion.section
+        ref={sectionRef}
+        className="space-y-16 max-w-4xl mx-auto"
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        variants={container}
+      >
+        <motion.article
+          className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-8"
+          variants={slideInLeft}
+          transition={transition}
+        >
           <div className="relative w-[160px] h-[160px] shrink-0 rounded-full overflow-hidden bg-gray-100">
             <Image
               src="/images/deliver-1.png"
@@ -50,9 +89,13 @@ export default function DeliveryPage() {
               входит в стоимость доставки.
             </p>
           </div>
-        </article>
+        </motion.article>
 
-        <article className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-8 md:flex-row-reverse">
+        <motion.article
+          className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-8 md:flex-row-reverse"
+          variants={slideInRight}
+          transition={transition}
+        >
           <div className="relative w-[170px] h-[170px] shrink-0 rounded-full overflow-hidden bg-gray-100">
             <Image
               src="/images/deliver-2.png"
@@ -75,10 +118,14 @@ export default function DeliveryPage() {
               так и «до двери».
             </p>
           </div>
-        </article>
-      </section>
+        </motion.article>
+      </motion.section>
+        </div>
+      </div>
 
-      <section className="mt-20 max-w-4xl mx-auto">
+      <div className="w-full bg-white py-20">
+        <div className="max-w-[1200px] mx-auto w-full px-4">
+      <section className="max-w-4xl mx-auto py-8 px-6">
         <div className="text-center">
           <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
             Рассчитать стоимость доставки
@@ -145,6 +192,8 @@ export default function DeliveryPage() {
           Доставка осуществляется в любой город России, Белоруссии и Казахстана.
         </p>
       </section>
+        </div>
+      </div>
     </main>
   );
 }
