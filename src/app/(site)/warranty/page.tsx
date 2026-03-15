@@ -4,14 +4,15 @@ import React from 'react';
 
 export default function WarrantyPage() {
   return (
-    <main className="max-w-[1200px] mx-auto w-full px-4 py-20">
+    <main className="w-full bg-[#f5f5f5] min-h-screen">
+      <div className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <h1
-        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333]"
+        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
       >
         Гарантия на товар
       </h1>
 
-      <div className="max-w-4xl mx-auto space-y-8 text-gray-600 text-[13px] leading-relaxed text-left">
+      <div className="max-w-4xl mx-auto space-y-8 text-gray-600 text-[13px] leading-relaxed text-justify">
         <section>
           <h2 className="text-[20px] font-semibold text-[#333] mb-4 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
             Гарантии
@@ -104,6 +105,7 @@ export default function WarrantyPage() {
             (сохраните его).
           </p>
         </section>
+      </div>
       </div>
     </main>
   );
