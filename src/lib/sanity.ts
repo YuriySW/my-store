@@ -107,7 +107,10 @@ const PRODUCT_BY_SLUG_QUERY = `*[_type == "product" && slug.current == $slug][0]
   "images": images[].asset->url,
   "category": category->name,
   "categorySlug": category->slug.current,
-  characteristics
+  characteristics,
+  video,
+  "drawing": drawing.asset->url,
+  instructions
 }`;
 
 const PRODUCT_META_QUERY = `*[_type == "product" && slug.current == $slug][0] { name, description }`;

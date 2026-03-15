@@ -17,4 +17,10 @@ export interface Product {
   category: string;
   categorySlug: string;
   characteristics: { key: string; value: string }[];
+  /** URL видео (YouTube, Vimeo и т.д.) */
+  video?: string;
+  /** URL изображения или PDF чертежа */
+  drawing?: string;
+  /** URL PDF инструкции или текст */
+  instructions?: string;
 }
