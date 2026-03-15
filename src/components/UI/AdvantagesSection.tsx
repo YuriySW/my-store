@@ -25,8 +25,8 @@ const containerStagger = {
   visible: { transition: { staggerChildren: 0.2, delayChildren: 0.1 } },
 };
 
-const transition = { duration: 1.35, ease: [0.22, 1, 0.36, 1] };
-const transitionDown = { duration: 0.85, ease: [0.22, 1, 0.36, 1] };
+const transition = { duration: 1.35, ease: [0.22, 1, 0.36, 1] as const };
+const transitionDown = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
 
 export const AdvantagesSection = () => {
   const ref = useRef(null);

@@ -21,7 +21,7 @@ const container = {
   },
 };
 
-const itemTransition = { duration: 0.6, ease: [0.22, 1, 0.36, 1] };
+const itemTransition = { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const };
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
