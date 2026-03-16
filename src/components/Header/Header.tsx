@@ -25,6 +25,7 @@ export const Header = () => {
   const [hoveredSubSlug, setHoveredSubSlug] = useState<string | null>(null);
   const catalogCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMobileCatalogOpen, setIsMobileCatalogOpen] = useState(false);
+  const [expandedMobileCategoryId, setExpandedMobileCategoryId] = useState<string | null>(null);
   const [expandedSubSlug, setExpandedSubSlug] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -376,7 +377,10 @@ export const Header = () => {
                       className="flex justify-between items-center border-b border-divider pb-4 cursor-pointer select-none"
                       onClick={() => {
                         setIsMobileCatalogOpen((v) => !v);
-                        if (isMobileCatalogOpen) setExpandedSubSlug(null);
+                        if (isMobileCatalogOpen) {
+                          setExpandedMobileCategoryId(null);
+                          setExpandedSubSlug(null);
+                        }
                       }}
                     >
                       <span className="text-xl font-medium text-[#333]">{item.name}</span>
@@ -392,64 +396,92 @@ export const Header = () => {
                         {categories.map((cat) => (
                           <div key={cat.id}>
                             <div
-                              onClick={() => handleCategoryClick(cat.slug)}
-                              className="text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
+                              onClick={() => {
+                                setExpandedMobileCategoryId((id) => (id === cat.id ? null : cat.id));
+                                setExpandedSubSlug(null);
+                              }}
+                              className="flex items-center justify-between text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
                             >
-                              {cat.name}
+                              <span>{cat.name}</span>
+                              {cat.subcategories?.length ? (
+                                <ChevronRight
+                                  size={20}
+                                  className={`flex-shrink-0 text-gray-400 transition-transform ${
+                                    expandedMobileCategoryId === cat.id ? 'rotate-90' : ''
+                                  }`}
+                                />
+                              ) : null}
                             </div>
-                            {cat.subcategories?.map((sub) => {
-                              const subProducts = products.filter((p) => p.categorySlug === sub.slug);
-                              const showProducts = subProducts.slice(0, 10);
-                              const hasMore = subProducts.length > 10;
-                              const isExpanded = expandedSubSlug === sub.slug;
-                              return (
-                                <div key={sub.id} className="border-b border-gray-50">
-                                  <div
-                                    onClick={() => setExpandedSubSlug((s) => (s === sub.slug ? null : sub.slug))}
-                                    className="flex items-center justify-between py-2 pl-4 text-base text-gray-500 cursor-pointer hover:bg-gray-50 rounded"
-                                  >
-                                    {sub.name}
-                                    {subProducts.length > 0 && (
-                                      <ChevronRight size={18} className={`flex-shrink-0 transition-transform text-gray-400 ${isExpanded ? 'rotate-90' : ''}`} />
-                                    )}
-                                  </div>
-                                  {isExpanded && (
-                                    <div className="pl-6 pb-2 flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
-                                      {showProducts.map((p) => (
-                                        <NextLink
-                                          key={p.id}
-                                          href={`/product/${p.slug}`}
-                                          onClick={() => { setIsMenuOpen(false); setExpandedSubSlug(null); }}
-                                          className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:text-red-600"
-                                        >
-                                          {p.images?.[0] && (
-                                            <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 bg-gray-100">
-                                              <img src={p.images[0]} alt="" className="w-full h-full object-contain" />
-                                            </div>
-                                          )}
-                                          <span className="truncate flex-1">{p.name}</span>
-                                          <span className="text-red-600 text-xs font-medium flex-shrink-0">{p.price.toLocaleString('ru-RU')} ₽</span>
-                                        </NextLink>
-                                      ))}
-                                      {hasMore && (
-                                        <NextLink
-                                          href={`/category/${sub.slug}`}
-                                          onClick={() => { setIsMenuOpen(false); setExpandedSubSlug(null); }}
-                                          className="py-2 text-sm font-bold text-red-600"
-                                        >
-                                          Остальной товар
-                                        </NextLink>
+                            {expandedMobileCategoryId === cat.id &&
+                              cat.subcategories?.map((sub) => {
+                                const subProducts = products.filter((p) => p.categorySlug === sub.slug);
+                                const showProducts = subProducts.slice(0, 10);
+                                const hasMore = subProducts.length > 10;
+                                const isExpanded = expandedSubSlug === sub.slug;
+                                return (
+                                  <div key={sub.id} className="border-b border-gray-50">
+                                    <div
+                                      onClick={() => setExpandedSubSlug((s) => (s === sub.slug ? null : sub.slug))}
+                                      className="flex items-center justify-between py-2 pl-4 text-base text-gray-500 cursor-pointer hover:bg-gray-50 rounded"
+                                    >
+                                      {sub.name}
+                                      {subProducts.length > 0 && (
+                                        <ChevronRight
+                                          size={18}
+                                          className={`flex-shrink-0 transition-transform text-gray-400 ${
+                                            isExpanded ? 'rotate-90' : ''
+                                          }`}
+                                        />
                                       )}
                                     </div>
-                                  )}
-                                </div>
-                              );
-                            })}
+                                    {isExpanded && (
+                                      <div className="pl-6 pb-2 flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
+                                        {showProducts.map((p) => (
+                                          <NextLink
+                                            key={p.id}
+                                            href={`/product/${p.slug}`}
+                                            onClick={() => {
+                                              setIsMenuOpen(false);
+                                              setExpandedMobileCategoryId(null);
+                                              setExpandedSubSlug(null);
+                                            }}
+                                            className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:text-red-600"
+                                          >
+                                            {p.images?.[0] && (
+                                              <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 bg-gray-100">
+                                                <img src={p.images[0]} alt="" className="w-full h-full object-contain" />
+                                              </div>
+                                            )}
+                                            <span className="truncate flex-1">{p.name}</span>
+                                            <span className="text-red-600 text-xs font-medium flex-shrink-0">
+                                              {p.price.toLocaleString('ru-RU')} ₽
+                                            </span>
+                                          </NextLink>
+                                        ))}
+                                        {hasMore && (
+                                          <NextLink
+                                            href={`/category/${sub.slug}`}
+                                            onClick={() => {
+                                              setIsMenuOpen(false);
+                                              setExpandedMobileCategoryId(null);
+                                              setExpandedSubSlug(null);
+                                            }}
+                                            className="py-2 text-sm font-bold text-red-600"
+                                          >
+                                            Остальной товар
+                                          </NextLink>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
                           </div>
                         ))}
                         <div
                           onClick={() => {
                             setIsMenuOpen(false);
+                            setExpandedMobileCategoryId(null);
                             setExpandedSubSlug(null);
                             router.push('/shop');
                           }}
