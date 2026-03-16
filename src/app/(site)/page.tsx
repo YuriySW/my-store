@@ -85,7 +85,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="py-24 max-w-[1200px] mx-auto px-4 bg-white">
+      <section className="py-6 max-w-[1200px] mx-auto px-4 bg-white">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
           {categories.map((cat) => (
             <Link key={cat.id} href={`/category/${cat.slug}`} className="group">
