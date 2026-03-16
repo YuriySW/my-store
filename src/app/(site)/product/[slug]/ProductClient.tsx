@@ -88,13 +88,13 @@ export default function ProductClient({product}: ProductClientProps) {
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 max-md:opacity-100 transition-opacity hover:bg-white text-black"
+                className="absolute left-1 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 max-md:opacity-100 transition-opacity hover:bg-white text-black"
               >
                 <ChevronLeft size={24} />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 max-md:opacity-100 transition-opacity hover:bg-white text-black"
+                className="absolute right-1 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 max-md:opacity-100 transition-opacity hover:bg-white text-black"
               >
                 <ChevronRight size={24} />
               </button>
