@@ -21,6 +21,9 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [hoveredCatId, setHoveredCatId] = useState<string | null>(null);
+  const [hoveredSubSlug, setHoveredSubSlug] = useState<string | null>(null);
+  const catalogCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMobileCatalogOpen, setIsMobileCatalogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -46,6 +49,10 @@ export const Header = () => {
       setSearchResults([]);
     }
   }, [searchQuery, products]);
+
+  useEffect(() => {
+    return () => { catalogCloseTimerRef.current && clearTimeout(catalogCloseTimerRef.current); };
+  }, []);
 
   // Закрытие при клике вне
   useEffect(() => {
@@ -213,10 +220,12 @@ export const Header = () => {
                 key={item.name}
                 className="relative group/item"
                 ref={item.hasDropdown ? catalogRef : null}
+                onMouseEnter={item.hasDropdown ? () => { catalogCloseTimerRef.current && clearTimeout(catalogCloseTimerRef.current); setIsCatalogOpen(true); } : undefined}
+                onMouseLeave={item.hasDropdown ? () => { catalogCloseTimerRef.current = setTimeout(() => { setIsCatalogOpen(false); setHoveredCatId(null); setHoveredSubSlug(null); }, 150); } : undefined}
               >
                 {item.hasDropdown ? (
                   <button
-                    onClick={() => setIsCatalogOpen(!isCatalogOpen)}
+                    type="button"
                     className="text-[13px] font-normal text-[#333] hover:text-red-600 transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-red-600 after:transition-all hover:after:w-full cursor-pointer"
                   >
                     {item.name}
@@ -234,33 +243,87 @@ export const Header = () => {
                   </NextLink>
                 )}
 
-                {/* Выпадающее меню каталога */}
+                {/* Выпадающее меню каталога: открывается по наведению, подкатегории выезжают при hover на категорию */}
                 {item.hasDropdown && isCatalogOpen && (
-                  <div className="absolute top-full left-0 mt-4 w-[250px] bg-[#333] shadow-xl z-[100] animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="absolute top-full left-0 mt-1 w-[260px] bg-[#333] shadow-xl z-[100] animate-in fade-in slide-in-from-top-2 duration-200 py-1 max-h-[80vh] overflow-y-auto">
                     <div className="flex flex-col py-0">
                       {categories.map((cat) => (
-                        <div key={cat.id}>
+                        <div
+                          key={cat.id}
+                          className="relative"
+                          onMouseEnter={() => setHoveredCatId(cat.id)}
+                          onMouseLeave={() => setHoveredCatId(null)}
+                        >
                           <button
+                            type="button"
                             onClick={() => handleCategoryClick(cat.slug)}
-                            className="px-[5px] py-[5px] text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans'] w-full"
+                            className="px-3 py-2.5 text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans'] w-full flex items-center justify-between"
                           >
                             {cat.name}
+                            {cat.subcategories?.length ? <ChevronRight size={14} className={`opacity-70 transition-transform ${hoveredCatId === cat.id ? 'translate-x-0.5' : ''}`} /> : null}
                           </button>
-                          {cat.subcategories?.map((sub) => (
-                            <button
-                              key={sub.id}
-                              onClick={() => handleCategoryClick(sub.slug)}
-                              className="pl-4 pr-[5px] py-[3px] text-left text-white/90 text-[12px] hover:bg-red-600 transition-colors font-['Open_Sans'] w-full"
+                          {cat.subcategories?.length ? (
+                            <div
+                              className={`overflow-hidden transition-[max-height] duration-200 ${hoveredCatId === cat.id ? 'max-h-[600px]' : 'max-h-0'}`}
                             >
-                              {sub.name}
-                            </button>
-                          ))}
+                              {cat.subcategories.map((sub) => {
+                                const subProducts = products.filter((p) => p.categorySlug === sub.slug);
+                                const showProducts = subProducts.slice(0, 10);
+                                const hasMore = subProducts.length > 10;
+                                const isSubHovered = hoveredSubSlug === sub.slug;
+                                return (
+                                  <div
+                                    key={sub.id}
+                                    className="relative"
+                                    onMouseEnter={() => setHoveredSubSlug(sub.slug)}
+                                    onMouseLeave={() => setHoveredSubSlug(null)}
+                                  >
+                                    <button
+                                      type="button"
+                                      onClick={() => handleCategoryClick(sub.slug)}
+                                      className="pl-6 pr-3 py-2 text-left text-white/90 text-[12px] hover:bg-red-600 hover:pl-7 transition-all font-['Open_Sans'] w-full border-l-2 border-transparent hover:border-red-500 flex items-center justify-between"
+                                    >
+                                      {sub.name}
+                                      {subProducts.length > 0 && <ChevronRight size={12} className={`opacity-70 transition-transform ${isSubHovered ? 'translate-x-0.5' : ''}`} />}
+                                    </button>
+                                    <div className={`overflow-hidden transition-[max-height] duration-200 ${isSubHovered ? 'max-h-[400px]' : 'max-h-0'}`}>
+                                      {showProducts.map((p) => (
+                                        <NextLink
+                                          key={p.id}
+                                          href={`/product/${p.slug}`}
+                                          onClick={() => setIsCatalogOpen(false)}
+                                          className="flex items-center gap-2 pl-9 pr-3 py-1.5 text-white/80 text-[11px] hover:bg-white/10 transition-colors font-['Open_Sans'] border-l-2 border-transparent hover:border-red-500/50"
+                                        >
+                                          {p.images?.[0] && (
+                                            <div className="w-6 h-6 rounded overflow-hidden flex-shrink-0 bg-white/10">
+                                              <img src={p.images[0]} alt="" className="w-full h-full object-contain" />
+                                            </div>
+                                          )}
+                                          <span className="truncate flex-1">{p.name}</span>
+                                          <span className="text-red-400/90 text-[10px] font-medium flex-shrink-0">{p.price.toLocaleString('ru-RU')} ₽</span>
+                                        </NextLink>
+                                      ))}
+                                      {hasMore && (
+                                        <NextLink
+                                          href={`/category/${sub.slug}`}
+                                          onClick={() => setIsCatalogOpen(false)}
+                                          className="block pl-9 pr-3 py-2 text-left text-white/90 text-[11px] font-bold hover:bg-red-600/80 transition-colors font-['Open_Sans']"
+                                        >
+                                          Остальной товар
+                                        </NextLink>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : null}
                         </div>
                       ))}
                       <NextLink
                         href="/shop"
                         onClick={() => setIsCatalogOpen(false)}
-                        className="px-[5px] py-[5px] text-left text-white text-[13px] font-bold hover:bg-red-600 transition-colors border-t border-white/10 font-['Open_Sans']"
+                        className="mx-2 mt-1 px-3 py-2 text-left text-white text-[13px] font-bold hover:bg-red-600 transition-colors border-t border-white/10 font-['Open_Sans'] rounded"
                       >
                         Все категории
                       </NextLink>
