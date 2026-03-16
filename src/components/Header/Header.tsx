@@ -221,8 +221,27 @@ export const Header = () => {
                 key={item.name}
                 className="relative group/item"
                 ref={item.hasDropdown ? catalogRef : null}
-                onMouseEnter={item.hasDropdown ? () => { catalogCloseTimerRef.current && clearTimeout(catalogCloseTimerRef.current); setIsCatalogOpen(true); } : undefined}
-                onMouseLeave={item.hasDropdown ? () => { catalogCloseTimerRef.current = setTimeout(() => { setIsCatalogOpen(false); setHoveredCatId(null); setHoveredSubSlug(null); }, 150); } : undefined}
+                onMouseEnter={
+                  item.hasDropdown
+                    ? () => {
+                        if (catalogCloseTimerRef.current) {
+                          clearTimeout(catalogCloseTimerRef.current);
+                        }
+                        setIsCatalogOpen(true);
+                      }
+                    : undefined
+                }
+                onMouseLeave={
+                  item.hasDropdown
+                    ? () => {
+                        catalogCloseTimerRef.current = setTimeout(() => {
+                          setIsCatalogOpen(false);
+                          setHoveredCatId(null);
+                          setHoveredSubSlug(null);
+                        }, 600);
+                      }
+                    : undefined
+                }
               >
                 {item.hasDropdown ? (
                   <button
@@ -246,7 +265,7 @@ export const Header = () => {
 
                 {/* Выпадающее меню каталога: открывается по наведению, подкатегории выезжают при hover на категорию */}
                 {item.hasDropdown && isCatalogOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-[260px] bg-[#333] shadow-xl z-[100] animate-in fade-in slide-in-from-top-2 duration-400 py-1 max-h-[80vh] overflow-y-auto">
+                  <div className="absolute top-full left-0 mt-1 w-[260px] bg-[#333] shadow-xl z-[100] animate-in fade-in slide-in-from-top-2 duration-1000 py-1 max-h-[80vh] overflow-y-auto">
                     <div className="flex flex-col py-0">
                       {categories.map((cat) => (
                         <div
@@ -265,7 +284,7 @@ export const Header = () => {
                           </button>
                           {cat.subcategories?.length ? (
                             <div
-                              className={`overflow-hidden transition-[max-height] duration-400 ${hoveredCatId === cat.id ? 'max-h-[600px]' : 'max-h-0'}`}
+                              className={`overflow-hidden transition-[max-height] duration-1000 ${hoveredCatId === cat.id ? 'max-h-[600px]' : 'max-h-0'}`}
                             >
                               {cat.subcategories.map((sub) => {
                                 const subProducts = products.filter((p) => p.categorySlug === sub.slug);
@@ -287,7 +306,7 @@ export const Header = () => {
                                       {sub.name}
                                       {subProducts.length > 0 && <ChevronRight size={12} className={`opacity-70 transition-transform ${isSubHovered ? 'translate-x-0.5' : ''}`} />}
                                     </button>
-                                    <div className={`overflow-hidden transition-[max-height] duration-400 ${isSubHovered ? 'max-h-[400px]' : 'max-h-0'}`}>
+                                    <div className={`overflow-hidden transition-[max-height] duration-1000 ${isSubHovered ? 'max-h-[400px]' : 'max-h-0'}`}>
                                       {showProducts.map((p) => (
                                         <NextLink
                                           key={p.id}
@@ -348,7 +367,7 @@ export const Header = () => {
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[70px] bg-white z-50 flex flex-col p-6 gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-400">
+          <div className="md:hidden fixed inset-0 top-[70px] bg-white z-50 flex flex-col p-6 gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-500">
             {menuItems.map((item) => (
               <div key={item.name} className="flex flex-col gap-4">
                 {item.hasDropdown ? (
@@ -369,7 +388,7 @@ export const Header = () => {
                       </div>
                     </div>
                     {isMobileCatalogOpen && (
-                      <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-400">
+                      <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-500">
                         {categories.map((cat) => (
                           <div key={cat.id}>
                             <div
