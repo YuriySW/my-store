@@ -10,11 +10,12 @@ export default async function Home() {
 
   return (
     <main className="text-black">
-      <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[760px]:min-h-[320px] max-[470px]:min-h-[340px]">
+      <div className="w-full bg-[#f5f5f5]">
+        <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[760px]:min-h-[320px] max-[470px]:min-h-[280px] max-[470px]:pb-1">
         <img
-          src="/images/hero-fireplace.jpg"
+          src="/images/hero-fireplace.png"
           alt="Биокамин Fireline"
-          className="w-full min-h-[280px] max-[470px]:min-h-0 max-[470px]:max-h-[200px] object-cover max-[470px]:object-contain object-center md:object-left lg:object-[35%] bg-white"
+          className="w-full min-h-[280px] max-[470px]:min-h-0 max-[470px]:max-h-[200px] object-cover max-[470px]:object-contain object-center md:object-left lg:object-[35%] bg-[#f5f5f5]"
         />
         {/* Оверлей: на узких экранах меньше верхний отступ, чтобы заголовок+подзаголовок+кнопка помещались */}
         <div
@@ -51,6 +52,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      </div>
 
       <section className="py-10 max-[468px]:pt-4 max-[468px]:pb-6 bg-white">
         <div className="max-w-[1200px] mx-auto px-4 text-center">
