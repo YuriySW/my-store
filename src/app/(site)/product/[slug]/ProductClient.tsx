@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 import {Button, useDisclosure} from '@nextui-org/react';
 import {ShoppingCart, Phone, ChevronLeft, ChevronRight} from 'lucide-react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -25,6 +25,7 @@ export default function ProductClient({product}: ProductClientProps) {
   const hasManyImages = images.length > THUMBNAILS_VISIBLE;
   const dispatch = useDispatch();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const touchStartXRef = useRef<number | null>(null);
 
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const productId = product._id ?? product.id;
@@ -58,7 +59,25 @@ export default function ProductClient({product}: ProductClientProps) {
 
       {/* Левая колонка: Слайдер изображений */}
       <div className="flex flex-col gap-6">
-        <div className="relative bg-[#f5f5f5] p-4 md:p-10 flex items-center justify-center rounded-sm min-h-[400px] group">
+        <div
+          className="relative bg-[#f5f5f5] p-4 md:p-10 flex items-center justify-center rounded-sm min-h-[400px] group"
+          onTouchStart={(e) => {
+            if (images.length <= 1) return;
+            touchStartXRef.current = e.touches[0]?.clientX ?? null;
+          }}
+          onTouchEnd={(e) => {
+            if (images.length <= 1) return;
+            if (touchStartXRef.current == null) return;
+            const deltaX = e.changedTouches[0]?.clientX - touchStartXRef.current;
+            touchStartXRef.current = null;
+            if (Math.abs(deltaX) < 40) return;
+            if (deltaX < 0) {
+              nextImage();
+            } else {
+              prevImage();
+            }
+          }}
+        >
           <img
             src={product.images?.[currentImageIndex]}
             alt={product.name}
