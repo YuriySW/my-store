@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { fetchCategories } from '@/lib/sanity';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ShopPage() {
   const categories = await fetchCategories();
 
