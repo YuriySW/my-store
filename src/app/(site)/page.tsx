@@ -11,47 +11,70 @@ export default async function Home() {
   return (
     <main className="text-black">
       <div className="w-full bg-[#f5f5f5]">
-        <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[760px]:min-h-[320px] max-[470px]:min-h-[280px] max-[470px]:pb-1">
-        <img
-          src="/images/hero-fireplace.png"
-          alt="Биокамин Fireline"
-          className="w-full min-h-[280px] max-[470px]:min-h-0 max-[470px]:max-h-[200px] object-cover max-[470px]:object-contain object-center md:object-left lg:object-[35%] bg-[#f5f5f5]"
-        />
-        {/* Оверлей: на узких экранах меньше верхний отступ, чтобы заголовок+подзаголовок+кнопка помещались */}
-        <div
-          className="absolute inset-0 z-10 flex items-start pointer-events-none pt-[clamp(5rem,14vh,10.25rem)] max-[760px]:pt-16 max-[470px]:pt-4"
-        >
-          <div className="pointer-events-auto max-w-[1200px] mx-auto w-full px-[clamp(0.75rem,4vw,1.5rem)] flex justify-end box-border">
-            <div
-              className="text-right min-w-0"
-              style={{ maxWidth: 'clamp(8.75rem, 35vw, 28rem)' }}
-            >
-              <p
-                className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase"
-                style={{ fontSize: 'clamp(0.8125rem, 1.8vw + 0.5rem, 1.875rem)' }}
+        {/* Десктопный герой: картинка + текст поверх справа */}
+        <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[760px]:hidden">
+          <img
+            src="/images/hero-fireplace.png"
+            alt="Биокамин Fireline"
+            className="w-full min-h-[280px] object-cover object-center md:object-left lg:object-[35%] bg-[#f5f5f5]"
+          />
+          <div className="absolute inset-0 z-10 flex items-start pointer-events-none pt-[clamp(5rem,14vh,10.25rem)]">
+            <div className="pointer-events-auto max-w-[1200px] mx-auto w-full px-[clamp(0.75rem,4vw,1.5rem)] flex justify-end box-border">
+              <div
+                className="text-right min-w-0"
+                style={{ maxWidth: 'clamp(8.75rem, 35vw, 28rem)' }}
               >
+                <p
+                  className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase"
+                  style={{ fontSize: 'clamp(0.8125rem, 1.8vw + 0.5rem, 1.875rem)' }}
+                >
+                  Премиальные камины по адекватным ценам
+                </p>
+                <p
+                  className="mt-[clamp(0.375rem,1vw,0.625rem)] font-['Raleway',_sans-serif] text-black/80 leading-snug"
+                  style={{ fontSize: 'clamp(0.6875rem, 1vw + 0.4rem, 0.875rem)' }}
+                >
+                  Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт характер и создаёт особую атмосферу в любом интерьере.
+                </p>
+                <Link
+                  href="/shop"
+                  className="inline-block mt-[clamp(0.5rem,1.5vw,1rem)] bg-red-600 text-white font-['Raleway',_sans-serif] font-bold uppercase tracking-[0.15em] rounded-lg shadow-lg shadow-red-900/30 hover:bg-red-500 hover:shadow-xl hover:shadow-red-900/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+                  style={{
+                    padding: 'clamp(0.375rem, 1.2vw, 0.875rem) clamp(0.75rem, 3vw, 2rem)',
+                    fontSize: 'clamp(0.5625rem, 1.2vw + 0.35rem, 0.8125rem)',
+                  }}
+                >
+                  В каталог
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Мобильный герой: картинка сверху, текст и кнопка под ней */}
+        <section className="w-full max-[760px]:block hidden">
+          <div className="max-w-[1200px] mx-auto w-full px-4 pt-4 pb-6">
+            <img
+              src="/images/hero-fireplace.png"
+              alt="Биокамин Fireline"
+              className="w-full h-auto mb-4 object-contain bg-[#f5f5f5]"
+            />
+            <div className="text-center">
+              <p className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase text-[18px]">
                 Премиальные камины по адекватным ценам
               </p>
-              <p
-                className="mt-[clamp(0.375rem,1vw,0.625rem)] font-['Raleway',_sans-serif] text-black/80 leading-snug"
-                style={{ fontSize: 'clamp(0.6875rem, 1vw + 0.4rem, 0.875rem)' }}
-              >
+              <p className="mt-2 font-['Raleway',_sans-serif] text-black/80 leading-snug text-[13px]">
                 Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт характер и создаёт особую атмосферу в любом интерьере.
               </p>
               <Link
                 href="/shop"
-                className="inline-block mt-[clamp(0.5rem,1.5vw,1rem)] bg-red-600 text-white font-['Raleway',_sans-serif] font-bold uppercase tracking-[0.15em] rounded-lg shadow-lg shadow-red-900/30 hover:bg-red-500 hover:shadow-xl hover:shadow-red-900/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
-                style={{
-                  padding: 'clamp(0.375rem, 1.2vw, 0.875rem) clamp(0.75rem, 3vw, 2rem)',
-                  fontSize: 'clamp(0.5625rem, 1.2vw + 0.35rem, 0.8125rem)',
-                }}
+                className="inline-block mt-4 bg-red-600 text-white font-['Raleway',_sans-serif] font-bold uppercase tracking-[0.15em] rounded-lg shadow-lg shadow-red-900/30 hover:bg-red-500 hover:shadow-xl hover:shadow-red-900/40 transition-all duration-300 px-6 py-2 text-[11px]"
               >
                 В каталог
               </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </div>
 
       <section className="py-10 max-[468px]:pt-4 max-[468px]:pb-6 bg-white">
@@ -63,10 +86,10 @@ export default async function Home() {
       </section>
 
       <section className="py-24 max-w-[1200px] mx-auto px-4 bg-white">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
           {categories.map((cat) => (
             <Link key={cat.id} href={`/category/${cat.slug}`} className="group">
-              <div className="bg-[#f5f5f5] p-8 mb-0 overflow-hidden flex items-center justify-center h-[250px]">
+              <div className="bg-[#f5f5f5] p-4 sm:p-6 lg:p-8 mb-0 overflow-hidden flex items-center justify-center aspect-square">
                 <img
                   src={cat.image || '/images/placeholder.png'}
                   alt={cat.name}
