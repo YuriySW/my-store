@@ -23,9 +23,8 @@ export const deskStructure: StructureResolver = (S) =>
                   S.listItem()
                     .title('Подкатегории')
                     .child(
-                      S.documentList()
+                      S.documentTypeList('category')
                         .title('Подкатегории')
-                        .schemaType('category')
                         .filter(`_type == "category" && parent._ref == $parentCategoryId`)
                         .params({ parentCategoryId })
                         .initialValueTemplates([
