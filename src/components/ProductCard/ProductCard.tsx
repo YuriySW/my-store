@@ -48,7 +48,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Информация о товаре (кроме кнопки) */}
           <div className="flex flex-col gap-1 px-1">
-            <h3 className="text-center font-['Raleway',_sans-serif] uppercase text-[13px] font-semibold tracking-[1px] text-[#2d2d2d] mt-[5px] mb-[5px] line-clamp-1">
+            <h3 className="text-center font-['Raleway',_sans-serif] uppercase text-[13px] font-semibold tracking-[1px] text-[#2d2d2d] mt-[5px] mb-[5px] whitespace-normal break-words leading-tight">
               {product.name}
             </h3>
             
