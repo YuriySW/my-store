@@ -6,6 +6,14 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'parent',
+      title: 'Родительская категория',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      weak: true,
+      description: 'Заполняется только для подкатегорий. Для основных категорий оставьте пустым.',
+    }),
+    defineField({
       name: 'name',
       title: 'Название категории',
       type: 'string',
@@ -33,6 +41,7 @@ export default defineType({
       name: 'subcategories',
       title: 'Подкатегории',
       type: 'array',
+      hidden: true,
       of: [
         {
           type: 'reference',
@@ -49,7 +58,15 @@ export default defineType({
   preview: {
     select: {
       title: 'name',
+      parentName: 'parent.name',
       media: 'image',
+    },
+    prepare({ title, parentName, media }) {
+      return {
+        title,
+        subtitle: parentName ? `В: ${parentName}` : undefined,
+        media,
+      }
     },
   },
 })

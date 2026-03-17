@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "favicon:round": "node scripts/round-favicon.mjs"
+    "favicon:round": "node scripts/round-favicon.mjs",
+    "sanity:migrate:category-parent": "node scripts/migrate-category-parent.mjs"
   },
   "dependencies": {
     "@nextui-org/react": "^2.6.11",
@@ -19,6 +20,7 @@
     "@upstash/redis": "^1.36.3",
     "axios": "^1.13.6",
     "classnames": "^2.5.1",
+    "dotenv": "^17.2.2",
     "framer-motion": "^12.34.4",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.576.0",

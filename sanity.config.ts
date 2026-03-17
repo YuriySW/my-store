@@ -2,6 +2,7 @@ import { defineConfig } from 'sanity';
 import { deskTool } from 'sanity/desk';
 import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './src/sanity/schemaTypes';
+import { deskStructure } from './src/sanity/deskStructure';
 
 export default defineConfig({
   name: 'default',
@@ -13,7 +14,7 @@ export default defineConfig({
   basePath: '/admin',
 
   plugins: [
-    deskTool(),
+    deskTool({ structure: deskStructure }),
     visionTool({
       defaultApiVersion: '2023-05-03', // Устанавливаем стабильную версию
     }),
@@ -21,5 +22,22 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+    templates: (prev) => [
+      ...prev,
+      {
+        id: 'subcategory-by-parent',
+        title: 'Подкатегория (в выбранной категории)',
+        schemaType: 'category',
+        parameters: [{ name: 'parentId', title: 'Parent category id', type: 'string' }],
+        value: ({ parentId }) => ({ parent: { _type: 'reference', _ref: parentId } }),
+      },
+      {
+        id: 'product-by-category',
+        title: 'Товар (в выбранной подкатегории)',
+        schemaType: 'product',
+        parameters: [{ name: 'categoryId', title: 'Category id', type: 'string' }],
+        value: ({ categoryId }) => ({ category: { _type: 'reference', _ref: categoryId } }),
+      },
+    ],
   },
 });
