@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useMemo, useState, useEffect, useRef} from 'react';
 import {ShoppingCart, Search, Phone, Menu, X, ChevronRight} from 'lucide-react';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState, AppDispatch} from '@/store/store';
@@ -18,9 +18,12 @@ export const Header = () => {
   const {categories} = useCategories();
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  const CATALOG_CLOSE_DELAY_MS = 1200;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isCatalogHoverLocked, setIsCatalogHoverLocked] = useState(false);
   const [hoveredCatId, setHoveredCatId] = useState<string | null>(null);
   const [hoveredSubSlug, setHoveredSubSlug] = useState<string | null>(null);
   const catalogCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -29,6 +32,18 @@ export const Header = () => {
   const [expandedSubSlug, setExpandedSubSlug] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+
+  const productsByCategorySlug = useMemo(() => {
+    const map = new Map<string, Product[]>();
+    for (const p of products) {
+      const key = p.categorySlug;
+      if (!key) continue;
+      const arr = map.get(key);
+      if (arr) arr.push(p);
+      else map.set(key, [p]);
+    }
+    return map;
+  }, [products]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -53,7 +68,9 @@ export const Header = () => {
   }, [searchQuery, products]);
 
   useEffect(() => {
-    return () => { catalogCloseTimerRef.current && clearTimeout(catalogCloseTimerRef.current); };
+    return () => {
+      catalogCloseTimerRef.current && clearTimeout(catalogCloseTimerRef.current);
+    };
   }, []);
 
   // Закрытие при клике вне
@@ -66,6 +83,7 @@ export const Header = () => {
       }
       if (catalogRef.current && !catalogRef.current.contains(target)) {
         setIsCatalogOpen(false);
+        setIsCatalogHoverLocked(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -235,11 +253,13 @@ export const Header = () => {
                 onMouseLeave={
                   item.hasDropdown
                     ? () => {
+                        if (isCatalogHoverLocked) return;
                         catalogCloseTimerRef.current = setTimeout(() => {
                           setIsCatalogOpen(false);
+                          setIsCatalogHoverLocked(false);
                           setHoveredCatId(null);
                           setHoveredSubSlug(null);
-                        }, 600);
+                        }, CATALOG_CLOSE_DELAY_MS);
                       }
                     : undefined
                 }
@@ -266,88 +286,150 @@ export const Header = () => {
 
                 {/* Выпадающее меню каталога: открывается по наведению, подкатегории выезжают при hover на категорию */}
                 {item.hasDropdown && isCatalogOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-[260px] bg-[#333] shadow-xl z-[100] animate-in fade-in slide-in-from-top-2 duration-1000 py-1 max-h-[80vh] overflow-y-auto">
-                    <div className="flex flex-col py-0">
-                      {categories.map((cat) => (
-                        <div
-                          key={cat.id}
-                          className="relative"
-                          onMouseEnter={() => setHoveredCatId(cat.id)}
-                          onMouseLeave={() => setHoveredCatId(null)}
-                        >
-                          <button
-                            type="button"
-                            onClick={() => handleCategoryClick(cat.slug)}
-                            className="px-3 py-2.5 text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans'] w-full flex items-center justify-between"
-                          >
-                            {cat.name}
-                            {cat.subcategories?.length ? <ChevronRight size={14} className={`opacity-70 transition-transform ${hoveredCatId === cat.id ? 'translate-x-0.5' : ''}`} /> : null}
-                          </button>
-                          {cat.subcategories?.length ? (
-                            <div
-                              className={`overflow-hidden transition-[max-height] duration-1000 ${hoveredCatId === cat.id ? 'max-h-[600px]' : 'max-h-0'}`}
-                            >
-                              {cat.subcategories.map((sub) => {
-                                const subProducts = products.filter((p) => p.categorySlug === sub.slug);
-                                const showProducts = subProducts.slice(0, 10);
-                                const hasMore = subProducts.length > 10;
-                                const isSubHovered = hoveredSubSlug === sub.slug;
-                                return (
-                                  <div
-                                    key={sub.id}
-                                    className="relative"
-                                    onMouseEnter={() => setHoveredSubSlug(sub.slug)}
-                                    onMouseLeave={() => setHoveredSubSlug(null)}
-                                  >
-                                    <button
-                                      type="button"
-                                      onClick={() => handleCategoryClick(sub.slug)}
-                                      className="pl-6 pr-3 py-2 text-left text-white/90 text-[12px] hover:bg-red-600 hover:pl-7 transition-all font-['Open_Sans'] w-full border-l-2 border-transparent hover:border-red-500 flex items-center justify-between"
-                                    >
-                                      {sub.name}
-                                      {subProducts.length > 0 && <ChevronRight size={12} className={`opacity-70 transition-transform ${isSubHovered ? 'translate-x-0.5' : ''}`} />}
-                                    </button>
-                                    <div className={`overflow-hidden transition-[max-height] duration-1000 ${isSubHovered ? 'max-h-[400px]' : 'max-h-0'}`}>
-                                      {showProducts.map((p) => (
-                                        <NextLink
-                                          key={p.id}
-                                          href={`/product/${p.slug}`}
-                                          onClick={() => setIsCatalogOpen(false)}
-                                          className="flex items-center gap-2 pl-9 pr-3 py-1.5 text-white/80 text-[11px] hover:bg-white/10 transition-colors font-['Open_Sans'] border-l-2 border-transparent hover:border-red-500/50"
-                                        >
-                                          {p.images?.[0] && (
-                                            <div className="w-6 h-6 rounded overflow-hidden flex-shrink-0 bg-white/10">
-                                              <img src={p.images[0]} alt="" className="w-full h-full object-contain" />
-                                            </div>
-                                          )}
-                                          <span className="truncate flex-1">{p.name}</span>
-                                          <span className="text-red-400/90 text-[10px] font-medium flex-shrink-0">{p.price.toLocaleString('ru-RU')} ₽</span>
-                                        </NextLink>
-                                      ))}
-                                      {hasMore && (
-                                        <NextLink
-                                          href={`/category/${sub.slug}`}
-                                          onClick={() => setIsCatalogOpen(false)}
-                                          className="block pl-9 pr-3 py-2 text-left text-white/90 text-[11px] font-bold hover:bg-red-600/80 transition-colors font-['Open_Sans']"
-                                        >
-                                          Остальной товар
-                                        </NextLink>
-                                      )}
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          ) : null}
-                        </div>
-                      ))}
-                      <NextLink
-                        href="/shop"
-                        onClick={() => setIsCatalogOpen(false)}
-                        className="mx-2 mt-1 px-3 py-2 text-left text-white text-[13px] font-bold hover:bg-red-600 transition-colors border-t border-white/10 font-['Open_Sans'] rounded"
+                  <div
+                    className="absolute top-full left-0 mt-1 z-[100] animate-in fade-in slide-in-from-top-2 duration-200"
+                    onMouseEnter={() => {
+                      if (catalogCloseTimerRef.current) clearTimeout(catalogCloseTimerRef.current);
+                      setIsCatalogHoverLocked(true);
+                    }}
+                    onMouseLeave={() => {
+                      setIsCatalogHoverLocked(false);
+                      catalogCloseTimerRef.current = setTimeout(() => {
+                        setIsCatalogOpen(false);
+                        setHoveredCatId(null);
+                        setHoveredSubSlug(null);
+                      }, CATALOG_CLOSE_DELAY_MS);
+                    }}
+                  >
+                    <div className="flex items-start">
+                      {/* Колонка 1: категории */}
+                      <div
+                        className={`w-[260px] bg-[#333] overflow-y-auto max-h-[80vh] overflow-hidden shadow-xl ${
+                          hoveredCatId ? 'rounded-l-md' : 'rounded-md'
+                        }`}
                       >
-                        Все категории
-                      </NextLink>
+                        {categories.map((cat) => (
+                          <div
+                            key={cat.id}
+                            className="relative"
+                            onMouseEnter={() => {
+                              setHoveredCatId(cat.id);
+                              setHoveredSubSlug(null);
+                            }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleCategoryClick(cat.slug)}
+                              className="h-10 px-3 text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans'] w-full flex items-center justify-between"
+                            >
+                              {cat.name}
+                              {cat.subcategories?.length ? (
+                                <ChevronRight
+                                  size={14}
+                                  className={`opacity-70 transition-transform ${hoveredCatId === cat.id ? 'translate-x-0.5' : ''}`}
+                                />
+                              ) : null}
+                            </button>
+                          </div>
+                        ))}
+                        <NextLink
+                          href="/shop"
+                          onClick={() => setIsCatalogOpen(false)}
+                          className="mx-2 mt-1 px-3 py-2 text-left text-white text-[13px] font-bold hover:bg-red-600 transition-colors border-t border-white/10 font-['Open_Sans'] rounded block"
+                        >
+                          Все категории
+                        </NextLink>
+                      </div>
+
+                      {/* Колонка 2: подкатегории */}
+                      {hoveredCatId ? (
+                        <div
+                          className={`w-[260px] bg-[#333] border-l border-white/10 overflow-y-auto max-h-[80vh] overflow-hidden ${
+                            hoveredSubSlug &&
+                            (productsByCategorySlug.get(hoveredSubSlug)?.length ?? 0) > 0
+                              ? 'shadow-none'
+                              : 'rounded-r-md shadow-xl'
+                          }`}
+                        >
+                          {categories
+                            .find((c) => c.id === hoveredCatId)
+                            ?.subcategories?.map((sub) => {
+                              const subProducts = productsByCategorySlug.get(sub.slug) ?? [];
+                              const isSubHovered = hoveredSubSlug === sub.slug;
+                              return (
+                                <div
+                                  key={sub.id}
+                                  className="relative"
+                                  onMouseEnter={() => {
+                                    if (subProducts.length > 0) setHoveredSubSlug(sub.slug);
+                                    else setHoveredSubSlug(null);
+                                  }}
+                                >
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCategoryClick(sub.slug)}
+                                    className="h-10 px-3 text-left text-white/90 text-[12px] hover:bg-red-600 transition-colors font-['Open_Sans'] w-full flex items-center justify-between"
+                                  >
+                                    {sub.name}
+                                    {subProducts.length > 0 ? (
+                                      <ChevronRight
+                                        size={12}
+                                        className={`opacity-70 transition-transform ${isSubHovered ? 'translate-x-0.5' : ''}`}
+                                      />
+                                    ) : null}
+                                  </button>
+                                </div>
+                              );
+                            })}
+                        </div>
+                      ) : null}
+
+                      {/* Колонка 3: товары */}
+                      {hoveredSubSlug &&
+                      (productsByCategorySlug.get(hoveredSubSlug)?.length ?? 0) > 0 ? (
+                        <div className="w-[320px] bg-[#333] border-l border-white/10 overflow-y-auto max-h-[80vh] overflow-hidden rounded-r-md shadow-xl">
+                          {(() => {
+                            const subProducts = productsByCategorySlug.get(hoveredSubSlug) ?? [];
+                            const showProducts = subProducts.slice(0, 10);
+                            const hasMore = subProducts.length > 10;
+                            return (
+                              <>
+                                {showProducts.map((p) => (
+                                  <NextLink
+                                    key={p.id}
+                                    href={`/product/${p.slug}`}
+                                    onClick={() => setIsCatalogOpen(false)}
+                                    className="h-10 flex items-center gap-2 px-3 text-white/80 text-[11px] hover:bg-white/10 transition-colors font-['Open_Sans']"
+                                  >
+                                    {p.images?.[0] ? (
+                                      <div className="w-6 h-6 rounded overflow-hidden flex-shrink-0 bg-white/10">
+                                        <img
+                                          src={p.images[0]}
+                                          alt=""
+                                          className="w-full h-full object-contain"
+                                        />
+                                      </div>
+                                    ) : null}
+                                    <span className="truncate flex-1">{p.name}</span>
+                                    <span className="text-red-400/90 text-[10px] font-medium flex-shrink-0">
+                                      {p.price.toLocaleString('ru-RU')} ₽
+                                    </span>
+                                  </NextLink>
+                                ))}
+                                {hasMore ? (
+                                  <NextLink
+                                    href={`/category/${hoveredSubSlug}`}
+                                    onClick={() => setIsCatalogOpen(false)}
+                                    className="block px-3 py-2 text-left text-white/90 text-[11px] font-bold hover:bg-red-600/80 transition-colors font-['Open_Sans']"
+                                  >
+                                    Остальной товар
+                                  </NextLink>
+                                ) : null}
+                              </>
+                            );
+                          })()}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 )}
@@ -397,7 +479,9 @@ export const Header = () => {
                           <div key={cat.id}>
                             <div
                               onClick={() => {
-                                setExpandedMobileCategoryId((id) => (id === cat.id ? null : cat.id));
+                                setExpandedMobileCategoryId((id) =>
+                                  id === cat.id ? null : cat.id,
+                                );
                                 setExpandedSubSlug(null);
                               }}
                               className="flex items-center justify-between text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
@@ -414,14 +498,20 @@ export const Header = () => {
                             </div>
                             {expandedMobileCategoryId === cat.id &&
                               cat.subcategories?.map((sub) => {
-                                const subProducts = products.filter((p) => p.categorySlug === sub.slug);
+                                const subProducts = products.filter(
+                                  (p) => p.categorySlug === sub.slug,
+                                );
                                 const showProducts = subProducts.slice(0, 10);
                                 const hasMore = subProducts.length > 10;
                                 const isExpanded = expandedSubSlug === sub.slug;
                                 return (
                                   <div key={sub.id} className="border-b border-gray-50">
                                     <div
-                                      onClick={() => setExpandedSubSlug((s) => (s === sub.slug ? null : sub.slug))}
+                                      onClick={() =>
+                                        setExpandedSubSlug((s) =>
+                                          s === sub.slug ? null : sub.slug,
+                                        )
+                                      }
                                       className="flex items-center justify-between py-2 pl-4 text-base text-gray-500 cursor-pointer hover:bg-gray-50 rounded"
                                     >
                                       {sub.name}
@@ -449,7 +539,11 @@ export const Header = () => {
                                           >
                                             {p.images?.[0] && (
                                               <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 bg-gray-100">
-                                                <img src={p.images[0]} alt="" className="w-full h-full object-contain" />
+                                                <img
+                                                  src={p.images[0]}
+                                                  alt=""
+                                                  className="w-full h-full object-contain"
+                                                />
                                               </div>
                                             )}
                                             <span className="truncate flex-1">{p.name}</span>
