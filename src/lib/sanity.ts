@@ -60,7 +60,7 @@ const CATEGORY_BY_SLUG_QUERY = `*[_type == "category" && slug.current == $slug][
   name,
   "slug": slug.current,
   "image": image.asset->url,
-  "subcategories": subcategories[]->{
+  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
     "id": _id,
     name,
     "slug": slug.current,
@@ -81,12 +81,12 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
   return sanityClient.fetch(CATEGORY_BY_SLUG_QUERY, {slug});
 }
 
-const CATEGORIES_QUERY = `*[_type == "category" && !(_id in *[_type == "category"].subcategories[]._ref) && !(("drafts." + _id) in *[_type == "category"].subcategories[]._ref)] {
+const CATEGORIES_QUERY = `*[_type == "category" && !defined(parent)] | order(name asc) {
   "id": _id,
   name,
   "slug": slug.current,
   "image": image.asset->url,
-  "subcategories": subcategories[]->{
+  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
     "id": _id,
     name,
     "slug": slug.current,
