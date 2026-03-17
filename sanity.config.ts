@@ -29,14 +29,18 @@ export default defineConfig({
         title: 'Подкатегория (в выбранной категории)',
         schemaType: 'category',
         parameters: [{ name: 'parentId', title: 'Parent category id', type: 'string' }],
-        value: ({ parentId }) => ({ parent: { _type: 'reference', _ref: parentId } }),
+        value: ({ parentId }: { parentId: string }) => ({
+          parent: { _type: 'reference', _ref: parentId },
+        }),
       },
       {
         id: 'product-by-category',
         title: 'Товар (в выбранной подкатегории)',
         schemaType: 'product',
         parameters: [{ name: 'categoryId', title: 'Category id', type: 'string' }],
-        value: ({ categoryId }) => ({ category: { _type: 'reference', _ref: categoryId } }),
+        value: ({ categoryId }: { categoryId: string }) => ({
+          category: { _type: 'reference', _ref: categoryId },
+        }),
       },
     ],
   },
