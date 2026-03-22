@@ -18,6 +18,23 @@ const container = {
 };
 const transition = { duration: 1.15, ease: [0.22, 1, 0.36, 1] as const };
 
+const DELIVERY_BLOCKS = [
+  {
+    src: '/images/deliver-1.png',
+    alt: 'Доставка по Екатеринбургу',
+    title: 'Доставка по Екатеринбургу',
+    body:
+      'Доставка по Екатеринбургу и области осуществляется нашим транспортом в течение 3–4 дней с момента заказа товара (при наличии на складе). Доставка по Екатеринбургу составляет 2000 рублей. Доставка по Свердловской области 2000 рублей + 20 рублей за 1 км. Разгрузка не входит в стоимость доставки.',
+  },
+  {
+    src: '/images/deliver-2.png',
+    alt: 'Доставка по России',
+    title: 'Доставка по России',
+    body:
+      'Наша компания осуществляет доставку нашей продукции и в другие города России. Для доставки мы пользуемся услугами проверенных транспортных компаний «ТК КИТ», «ТК ПЭК», «ТК ДЕЛОВЫЕ ЛИНИИ». Доставка может осуществляться как до терминала транспортной компании в Вашем городе, так и «до двери».',
+  },
+] as const;
+
 export default function DeliveryPage() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
@@ -26,20 +43,12 @@ export default function DeliveryPage() {
       <div className="w-full bg-[#f5f5f5]">
         <div className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <h1
-        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
+        className="text-4xl font-bold uppercase tracking-tighter mb-5 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
       >
         Условия доставки
       </h1>
 
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
-          Доставка
-        </h2>
-        <p className="text-[#333] text-[15px] mb-2">Как мы доставляем заказы</p>
-        <div className="border-b border-gray-200 w-64 mx-auto mb-12" />
-      </div>
-
-      <p className="text-gray-600 mb-12 max-w-3xl mx-auto text-center">
+      <p className="text-gray-600 mb-[10px] max-w-3xl mx-auto text-center">
         Осуществляем доставку Ваших заказов по всей России, а так же в Казахстан и
         Белоруссию.
       </p>
@@ -56,69 +65,79 @@ export default function DeliveryPage() {
 
       <motion.section
         ref={sectionRef}
-        className="space-y-16 max-w-4xl mx-auto"
+        className="mx-auto max-w-5xl space-y-8"
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
         variants={container}
       >
-        <motion.article
-          className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-8"
-          variants={slideInLeft}
-          transition={transition}
-        >
-          <div className="relative w-[160px] h-[160px] shrink-0 rounded-full overflow-hidden bg-gray-100">
-            <Image
-              src="/images/deliver-1.png"
-              alt="Доставка по Екатеринбургу"
-              fill
-              className="object-cover"
-              sizes="160px"
-              priority
-            />
-          </div>
+        {DELIVERY_BLOCKS.map((item, index) => {
+          const fromRight = index % 2 === 1;
+          const size = 168;
+          const step = index + 1;
 
-          <div className="max-w-xl text-center">
-            <h2 className="text-[20px] font-semibold text-[#333] mb-2 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
-              Доставка по Екатеринбургу
-            </h2>
-            <p className="text-gray-600 text-[13px] leading-relaxed">
-              Доставка по Екатеринбургу и области осуществляется нашим транспортом в
-              течение 3–4 дней с момента заказа товара (при наличии на складе).
-              Доставка по Екатеринбургу составляет 2000 рублей. Доставка по
-              Свердловской области 2000 рублей + 20 рублей за 1 км. Разгрузка не
-              входит в стоимость доставки.
-            </p>
-          </div>
-        </motion.article>
+          const numberCircle = (
+            <div
+              className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-[#d4d4d4] font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[17px] font-bold text-[#4a4a4a] md:col-start-2 md:row-start-1 md:justify-self-center"
+              aria-hidden
+            >
+              {step}
+            </div>
+          );
 
-        <motion.article
-          className="flex flex-col md:flex-row items-center md:items-start justify-center gap-6 md:gap-8 md:flex-row-reverse"
-          variants={slideInRight}
-          transition={transition}
-        >
-          <div className="relative w-[170px] h-[170px] shrink-0 rounded-full overflow-hidden bg-gray-100">
-            <Image
-              src="/images/deliver-2.png"
-              alt="Доставка по России"
-              fill
-              className="object-cover"
-              sizes="170px"
-            />
-          </div>
+          const imageBlock = (
+            <div
+              className={`flex shrink-0 justify-center md:row-start-1 md:w-full ${
+                fromRight
+                  ? 'md:col-start-3 md:justify-start'
+                  : 'md:col-start-1 md:justify-end'
+              }`}
+            >
+              <div
+                className="relative rounded-full overflow-hidden bg-gray-200"
+                style={{ width: size, height: size }}
+              >
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  fill
+                  className="object-cover"
+                  sizes={`${size}px`}
+                  priority={index === 0}
+                />
+              </div>
+            </div>
+          );
 
-          <div className="max-w-xl text-center">
-            <h2 className="text-[20px] font-semibold text-[#333] mb-2 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
-              Доставка по России
-            </h2>
-            <p className="text-gray-600 text-[13px] leading-relaxed">
-              Наша компания осуществляет доставку нашей продукции и в другие города
-              России. Для доставки мы пользуемся услугами проверенных транспортных
-              компаний «ТК КИТ», «ТК ПЭК», «ТК ДЕЛОВЫЕ ЛИНИИ». Доставка может
-              осуществляться как до терминала транспортной компании в Вашем городе,
-              так и «до двери».
-            </p>
-          </div>
-        </motion.article>
+          const textBlock = (
+            <div
+              className={`max-w-xl w-full md:row-start-1 md:w-full ${
+                fromRight
+                  ? 'md:col-start-1 md:justify-self-end text-center md:text-right'
+                  : 'md:col-start-3 md:justify-self-start text-center md:text-left'
+              }`}
+            >
+              <h2 className="text-[20px] font-semibold text-[#333] mb-2 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
+                {item.title}
+              </h2>
+              <p className="text-gray-600 text-[13px] leading-relaxed font-['Open_Sans',_Helvetica,_Arial,_sans-serif]">
+                {item.body}
+              </p>
+            </div>
+          );
+
+          return (
+            <motion.article
+              key={item.src}
+              className="flex w-full max-w-5xl flex-col items-center gap-4 md:mx-auto md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-6 md:gap-y-0 lg:gap-x-10"
+              variants={fromRight ? slideInRight : slideInLeft}
+              transition={transition}
+            >
+              {imageBlock}
+              {numberCircle}
+              {textBlock}
+            </motion.article>
+          );
+        })}
       </motion.section>
         </div>
       </div>

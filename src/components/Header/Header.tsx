@@ -111,33 +111,34 @@ export const Header = () => {
     {name: 'Оплата', href: '/payment'},
     {name: 'Гарантия', href: '/warranty'},
     {name: 'Доставка', href: '/delivery'},
+    {name: 'Сотрудничество', href: '/cooperation'},
     {name: 'Контакты', href: '/contacts'},
   ];
 
   return (
-    <header className="w-full bg-white pt-4 md:pt-8 pb-4 sticky top-0 z-50 border-b border-divider md:border-none">
+    <header className="w-full bg-white pt-4 min-[880px]:pt-8 pb-4 sticky top-0 z-50 border-b border-divider min-[880px]:border-none">
       <div className="max-w-[1200px] mx-auto px-4 relative" ref={searchRef}>
         {/* Top Row: Logo and Icons */}
-        <div className="flex justify-between items-center mb-4 md:mb-8">
-          <div className="flex items-center md:hidden">
+        <div className="flex justify-between items-center mb-4 min-[880px]:mb-8">
+          <div className="flex items-center min-[880px]:hidden">
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-[#333] p-2">
               {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
 
-          <div className="flex-1 flex justify-center md:justify-start items-center">
+          <div className="flex-1 flex justify-center min-[880px]:justify-start items-center">
             <NextLink href="/">
               <img
                 src="/images/logo.png"
                 alt="FIRELINE"
-                className="w-[150px] md:w-[190px] h-auto block"
+                className="w-[150px] min-[880px]:w-[190px] h-auto block"
               />
             </NextLink>
           </div>
 
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-4 min-[880px]:gap-6">
             {/* Поиск (Desktop) */}
-            <div className="hidden md:relative md:flex items-center">
+            <div className="hidden min-[880px]:relative min-[880px]:flex items-center">
               {isSearchOpen ? (
                 <div className="absolute right-0 flex items-center animate-in slide-in-from-right-4 duration-300 z-50">
                   <Input
@@ -167,7 +168,7 @@ export const Header = () => {
             {/* Поиск (Mobile Toggle) */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="md:hidden text-[#333] hover:text-red-600 transition-colors"
+              className="min-[880px]:hidden text-[#333] hover:text-red-600 transition-colors"
             >
               {isSearchOpen ? <X size={24} /> : <Search size={24} strokeWidth={1.5} />}
             </button>
@@ -188,7 +189,7 @@ export const Header = () => {
 
         {/* Mobile Search Bar (Below Logo) */}
         {isSearchOpen && (
-          <div className="md:hidden w-full mb-4 animate-in slide-in-from-top-2 duration-300">
+          <div className="min-[880px]:hidden w-full mb-4 animate-in slide-in-from-top-2 duration-300">
             <Input
               autoFocus
               placeholder="Поиск камина..."
@@ -207,7 +208,7 @@ export const Header = () => {
 
         {/* Результаты поиска (Shared) */}
         {isSearchOpen && searchResults.length > 0 && (
-          <div className="absolute top-full left-4 right-4 md:left-auto md:right-0 mt-2 md:w-[400px] bg-white shadow-2xl border border-divider rounded-xl overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
+          <div className="absolute top-full left-4 right-4 min-[880px]:left-auto min-[880px]:right-0 mt-2 min-[880px]:w-[400px] bg-white shadow-2xl border border-divider rounded-xl overflow-hidden z-[60] animate-in fade-in zoom-in-95 duration-200">
             {searchResults.map((product) => (
               <div
                 key={product.id}
@@ -233,7 +234,7 @@ export const Header = () => {
         )}
 
         {/* Bottom Row: Menu and Phone (Desktop only) */}
-        <div className="hidden md:flex justify-between items-center relative">
+        <div className="hidden min-[880px]:flex justify-between items-center relative">
           <nav className="flex gap-6 lg:gap-10">
             {menuItems.map((item) => (
               <div
@@ -440,17 +441,17 @@ export const Header = () => {
           <div className="flex items-center gap-2 text-[#333] font-['Open_Sans',_Helvetica,_Arial,_sans-serif]">
             <Phone size={18} strokeWidth={1.5} />
             <a
-              href="tel:+79122252442"
+              href="tel:+73432002883"
               className="text-[15px] font-normal hover:text-red-600 transition-colors"
             >
-              +7 (912) 225 24 42
+              +7 (343) 200-28-83
             </a>
           </div>
         </div>
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[70px] bg-white z-50 flex flex-col p-6 gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="min-[880px]:hidden fixed inset-0 top-[70px] bg-white z-50 flex flex-col p-6 gap-6 overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-500">
             {menuItems.map((item) => (
               <div key={item.name} className="flex flex-col gap-4">
                 {item.hasDropdown ? (
@@ -599,8 +600,8 @@ export const Header = () => {
             ))}
             <div className="flex items-center gap-4 text-[#333] mt-4">
               <Phone size={24} strokeWidth={1.5} />
-              <a href="tel:+79122252442" className="text-lg font-bold">
-                +7 (912) 225 24 42
+              <a href="tel:+73432002883" className="text-lg font-bold">
+                +7 (343) 200-28-83
               </a>
             </div>
           </div>

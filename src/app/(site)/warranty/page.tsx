@@ -1,16 +1,27 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 export default function WarrantyPage() {
   return (
     <main className="w-full bg-[#f5f5f5] min-h-screen">
       <div className="max-w-[1200px] mx-auto w-full px-4 py-20">
       <h1
-        className="text-4xl font-bold uppercase tracking-tighter mb-10 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
+        className="text-4xl font-bold uppercase tracking-tighter mb-5 font-['Raleway',_Helvetica,_Arial,_sans-serif] text-[#333] text-center"
       >
         Гарантия на товар
       </h1>
+
+      <div className="mb-10 flex justify-center">
+        <Image
+          src="/images/garan.png"
+          alt="Гарантия на товар"
+          width={896}
+          height={320}
+          className="h-auto max-h-[270px] w-full max-w-4xl object-contain sm:max-h-[320px]"
+        />
+      </div>
 
       <div className="max-w-4xl mx-auto space-y-8 text-gray-600 text-[13px] leading-relaxed text-justify">
         <section>

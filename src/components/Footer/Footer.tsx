@@ -23,6 +23,10 @@ const container = {
 
 const itemTransition = { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const };
 
+/** Как t.me/…: веб/приложение Max. Своя ссылка профиля — в .env NEXT_PUBLIC_MAX_MESSENGER_URL */
+const MAX_MESSENGER_HREF =
+  process.env.NEXT_PUBLIC_MAX_MESSENGER_URL?.trim() || 'https://max.ru/@domkaminov66';
+
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -33,7 +37,13 @@ export const Footer = () => {
     { 
       name: 'vk', 
       href: 'https://m.vk.com/dom_kaminov',
-      content: <span className="text-[18px] font-bold font-sans leading-none">VK</span>
+      content: (
+        <img
+          src="/images/vkw.png"
+          alt="ВКонтакте"
+          className="h-10 w-10 object-contain"
+        />
+      ),
     },
     { 
       name: 'instagram', 
@@ -49,6 +59,17 @@ export const Footer = () => {
       name: 'telegram', 
       href: 'https://t.me/domkaminov66',
       svg: <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.891 8.221l-1.97 9.28c-.145.658-.537.818-1.084.482l-3-2.21-1.446 1.394c-.16.16-.294.294-.603.294l.215-3.052 5.554-5.019c.242-.214-.053-.333-.376-.136l-6.866 4.32-2.962-.924c-.644-.203-.658-.644.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+    },
+    {
+      name: 'max',
+      href: MAX_MESSENGER_HREF,
+      content: (
+        <img
+          src="/images/Max_log.png"
+          alt="Max"
+          className="h-7 w-7 object-contain"
+        />
+      ),
     },
     { 
       name: 'whatsapp', 
@@ -85,7 +106,7 @@ export const Footer = () => {
         <motion.div className="w-20 h-[1px] bg-gray-600 mb-16" variants={fadeInDown} transition={itemTransition} />
 
         <motion.div
-          className="max-w-[1200px] mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-12 mb-16"
+          className="max-w-[1200px] mx-auto w-full grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 md:gap-12 mb-16"
           variants={fadeInDown}
           transition={itemTransition}
         >
@@ -114,7 +135,7 @@ export const Footer = () => {
               <Phone size={28} strokeWidth={1.5} className="rotate-12" />
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-gray-400 text-sm uppercase tracking-widest">watsapp/viber</span>
+              <span className="text-gray-400 text-sm uppercase tracking-widest">telegram / max</span>
               <a href="tel:+79122252442" className="text-lg font-medium hover:text-red-500 transition-colors">+7 912 225 24 42</a>
             </div>
           </div>
@@ -133,12 +154,15 @@ export const Footer = () => {
         {/* Соцсети и кнопка */}
         <motion.div className="flex flex-col items-center gap-10" variants={fadeInDown} transition={itemTransition}>
           <div className="flex flex-wrap justify-center gap-6">
-            {socialLinks.map((social) => (
+            {socialLinks.map((social) => {
+              const openInNewTab = /^https?:\/\//i.test(social.href);
+              return (
               <a 
                 key={social.name} 
                 href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(openInNewTab
+                  ? { target: '_blank', rel: 'noopener noreferrer' }
+                  : {})}
                 className="w-14 h-14 border border-white/30 rounded-full flex items-center justify-center hover:border-white hover:bg-white/10 cursor-pointer transition-all group"
               >
                 {social.svg ? (
@@ -155,7 +179,8 @@ export const Footer = () => {
                   </div>
                 )}
               </a>
-            ))}
+            );
+            })}
           </div>
 
           <Button 
@@ -178,6 +203,7 @@ export const Footer = () => {
           <NextLink href="/portfolio" className="text-inherit hover:text-white transition-colors">Портфолио</NextLink>
           <NextLink href="/payment" className="text-inherit hover:text-white transition-colors">Оплата</NextLink>
           <NextLink href="/delivery" className="text-inherit hover:text-white transition-colors">Доставка</NextLink>
+          <NextLink href="/cooperation" className="text-inherit hover:text-white transition-colors">Сотрудничество</NextLink>
         </motion.div>
         </motion.div>
       </div>

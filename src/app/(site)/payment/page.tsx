@@ -63,12 +63,14 @@ export default function PaymentPage() {
         Условия оплаты
       </h1>
 
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-[26px] font-semibold text-[#333] font-['Raleway',_Helvetica,_Arial,_sans-serif]">
-          Оплата
-        </h2>
-        <p className="text-[#333] text-[15px] mb-2">Как можно оплатить заказ</p>
-        <div className="border-b border-gray-200 w-64 mx-auto mb-12" />
+      <div className="mb-12 flex justify-center">
+        <Image
+          src="/images/credit.png"
+          alt="Оплата"
+          width={896}
+          height={280}
+          className="h-auto w-full max-w-4xl object-contain"
+        />
       </div>
 
       <p className="text-gray-600 mb-12 max-w-3xl mx-auto text-center">
@@ -78,39 +80,78 @@ export default function PaymentPage() {
 
       <motion.section
         ref={sectionRef}
-        className="space-y-16 max-w-4xl mx-auto"
+        className="mx-auto max-w-5xl space-y-8"
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
         variants={container}
       >
-        {paymentMethods.map((item, index) => (
-          <motion.article
-            key={item.number}
-            className={`flex flex-col md:flex-row items-center gap-8 ${
-              index % 2 === 1 ? 'md:flex-row-reverse' : ''
-            }`}
-            variants={index % 2 === 0 ? slideInLeft : slideInRight}
-            transition={transition}
-          >
-            <div className="relative w-[160px] h-[160px] shrink-0 rounded-full overflow-hidden bg-gray-100 self-center">
-              <Image
-                src={item.src}
-                alt={item.title}
-                fill
-                className="object-cover"
-                sizes="160px"
-              />
+        {paymentMethods.map((item, index) => {
+          const fromRight = index % 2 === 1;
+          const size = 168;
+
+          const numberCircle = (
+            <div
+              className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-[#d4d4d4] font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[17px] font-bold text-[#4a4a4a] md:col-start-2 md:row-start-1 md:justify-self-center"
+              aria-hidden
+            >
+              {item.number}
             </div>
-            <div className="max-w-xl flex-1 text-left min-w-0 md:text-left text-center">
+          );
+
+          const imageBlock = (
+            <div
+              className={`flex shrink-0 justify-center md:row-start-1 md:w-full ${
+                fromRight
+                  ? 'md:col-start-3 md:justify-start'
+                  : 'md:col-start-1 md:justify-end'
+              }`}
+            >
+              <div
+                className="relative rounded-full overflow-hidden bg-gray-200"
+                style={{ width: size, height: size }}
+              >
+                <Image
+                  src={item.src}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                  sizes={`${size}px`}
+                  priority={index === 0}
+                />
+              </div>
+            </div>
+          );
+
+          const textBlock = (
+            <div
+              className={`max-w-xl w-full md:row-start-1 md:w-full ${
+                fromRight
+                  ? 'md:col-start-1 md:justify-self-end text-center md:text-right'
+                  : 'md:col-start-3 md:justify-self-start text-center md:text-left'
+              }`}
+            >
               <h3 className="text-[20px] font-semibold text-[#333] mb-2 font-['Raleway',_Helvetica,_Arial,_sans-serif]">
                 {item.title}.
               </h3>
-              <p className="text-gray-600 text-[13px] leading-relaxed text-justify">
+              <p className="text-gray-600 text-[13px] leading-relaxed font-['Open_Sans',_Helvetica,_Arial,_sans-serif]">
                 {item.text}
               </p>
             </div>
-          </motion.article>
-        ))}
+          );
+
+          return (
+            <motion.article
+              key={item.number}
+              className="flex w-full max-w-5xl flex-col items-center gap-4 md:mx-auto md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-x-6 md:gap-y-0 lg:gap-x-10"
+              variants={fromRight ? slideInRight : slideInLeft}
+              transition={transition}
+            >
+              {imageBlock}
+              {numberCircle}
+              {textBlock}
+            </motion.article>
+          );
+        })}
       </motion.section>
 
       <section className="mt-20 space-y-6 max-w-4xl mx-auto text-center">

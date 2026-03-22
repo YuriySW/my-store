@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { AdvantagesSection } from '@/components/UI/AdvantagesSection';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
+import { AboutUsSection } from '@/components/UI/AboutUsSection';
 import { fetchCategories } from '@/lib/sanity';
 
 export const dynamic = 'force-dynamic';
@@ -63,7 +64,7 @@ export default async function Home() {
               <p className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase text-[18px]">
                 Премиальные камины по адекватным ценам
               </p>
-              <p className="mt-2 font-['Raleway',_sans-serif] text-black/80 leading-snug text-[13px]">
+              <p className="mt-2 hyphens-auto text-justify font-['Raleway',_sans-serif] text-black/80 leading-snug text-[13px]">
                 Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт характер и создаёт особую атмосферу в любом интерьере.
               </p>
               <Link
@@ -78,9 +79,9 @@ export default async function Home() {
       </div>
 
       <section className="py-10 max-[468px]:pt-4 max-[468px]:pb-6 bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 text-center">
-          <p className="font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[16px] font-normal leading-[1.618] text-[#333]">
-            Биокамины Fireline. Производство биокаминов премиум качества по ценам производителя. Изготовление биокаминов на заказ по вашим размерам
+        <div className="max-w-[1200px] mx-auto px-4">
+          <p className="font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[16px] font-normal leading-[1.618] text-[#333] text-justify">
+            Фаерлайн — бренд премиальных каминов, биокаминов, электрокаминов и барбекю комплексов. Наше производство отличается своим качеством и стильным дизайном. Каждый наш продукт является истинным произведением искусства, который добавляет уют и элегантность в любое помещение.
           </p>
         </div>
       </section>
@@ -106,6 +107,7 @@ export default async function Home() {
 
       <AdvantagesSection />
       <FeaturesBlock />
+      <AboutUsSection />
     </main>
   );
 }
