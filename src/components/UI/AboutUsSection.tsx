@@ -164,7 +164,7 @@ export const AboutUsSection = () => {
           />
 
           <div
-            className="relative hidden min-h-[clamp(120px,42vw,540px)] w-full min-w-0 md:block md:min-h-[min(70vw,650px)] lg:min-h-[min(62vw,610px)]"
+            className="relative hidden min-h-[clamp(120px,42vw,540px)] w-full min-w-0 md:block md:min-h-[min(46vw,423px)] lg:min-h-[min(40vw,397px)]"
             aria-hidden
           />
         </div>
