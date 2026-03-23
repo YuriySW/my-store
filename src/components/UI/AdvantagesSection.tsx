@@ -22,7 +22,7 @@ export const AdvantagesSection = () => {
   const isInView = useInView(ref, { once: false, amount: 0.25 });
 
   return (
-    <section ref={ref} className="py-12 sm:py-16 md:py-20 bg-[#e8e4de]">
+    <section ref={ref} className="overflow-x-hidden py-12 sm:py-16 md:py-20 bg-[#e8e4de]">
       <div className="mx-auto grid min-w-0 max-w-[1200px] grid-cols-2 items-center gap-3 px-3 sm:gap-6 sm:px-4 md:gap-12 lg:gap-20">
         <motion.div
           className="flex min-w-0 justify-center md:justify-end"

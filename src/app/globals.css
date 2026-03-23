@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Prevent temporary horizontal overflow during transform/animation
+   from causing a scrollbar/visual artifact on the right. */
+html,
+body {
+  overflow-x: hidden;
+}
