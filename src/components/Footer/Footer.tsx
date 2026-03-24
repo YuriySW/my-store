@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link, Divider, Button, useDisclosure } from '@nextui-org/react';
 import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Phone, Mail, MapPin, Instagram, Facebook, Youtube } from 'lucide-react';
 import { CallbackModal } from '@/components/UI/CallbackModal';
 import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
@@ -28,10 +29,20 @@ const MAX_MESSENGER_HREF =
   process.env.NEXT_PUBLIC_MAX_MESSENGER_URL?.trim() || 'https://max.ru/@domkaminov66';
 
 export const Footer = () => {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.2 });
+  const footerMenuItems = [
+    { name: 'Портфолио', href: '/portfolio' },
+    { name: 'Новости', href: '/news' },
+    { name: 'Оплата', href: '/payment' },
+    { name: 'Гарантия', href: '/warranty' },
+    { name: 'Доставка', href: '/delivery' },
+    { name: 'Сотрудничество', href: '/cooperation' },
+    { name: 'Контакты', href: '/contacts' },
+  ];
 
   const socialLinks = [
     { 
@@ -197,13 +208,19 @@ export const Footer = () => {
           variants={fadeInDown}
           transition={itemTransition}
         >
-          <NextLink href="/about" className="text-inherit hover:text-white transition-colors">О компании</NextLink>
-          <NextLink href="/designers" className="text-inherit hover:text-white transition-colors">Дизайнерам</NextLink>
-          <NextLink href="/news" className="text-inherit hover:text-white transition-colors">Новости</NextLink>
-          <NextLink href="/portfolio" className="text-inherit hover:text-white transition-colors">Портфолио</NextLink>
-          <NextLink href="/payment" className="text-inherit hover:text-white transition-colors">Оплата</NextLink>
-          <NextLink href="/delivery" className="text-inherit hover:text-white transition-colors">Доставка</NextLink>
-          <NextLink href="/cooperation" className="text-inherit hover:text-white transition-colors">Сотрудничество</NextLink>
+          {footerMenuItems.map((item) => (
+            <NextLink
+              key={item.name}
+              href={item.href}
+              className={`text-[13px] font-normal transition-all font-['Open_Sans',_Helvetica,_Arial,_sans-serif] relative pb-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-red-600 after:transition-all ${
+                pathname === item.href
+                  ? 'text-red-500 after:w-full'
+                  : 'text-gray-300 after:w-0 hover:text-white hover:after:w-full'
+              }`}
+            >
+              {item.name}
+            </NextLink>
+          ))}
         </motion.div>
         </motion.div>
       </div>
