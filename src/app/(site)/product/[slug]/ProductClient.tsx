@@ -230,20 +230,9 @@ export default function ProductClient({product}: ProductClientProps) {
           )}
           {activeTab === 'details' && (
             <div className="space-y-6">
-              {product.characteristics && product.characteristics.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  {product.characteristics.map((char: any, idx: number) => (
-                    <p key={idx} className="text-gray-700 text-[14px] font-medium">
-                      <span className="uppercase tracking-wider text-gray-500">{char.key}:</span>{' '}
-                      <span className="text-black">{char.value}</span>
-                    </p>
-                  ))}
-                </div>
-              )}
-              {product.details?.trim() && product.details.trim() !== 'Детали' && (
+              {product.details?.trim() && product.details.trim() !== 'Детали' ? (
                 <div className="whitespace-pre-line">{product.details}</div>
-              )}
-              {(!product.details?.trim() || product.details.trim() === 'Детали') && !product.characteristics?.length && (
+              ) : (
                 <div className="text-gray-500">Детальная информация скоро появится.</div>
               )}
             </div>

@@ -40,7 +40,9 @@ export default defineType({
       title: 'Изображения товара',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
-      validation: (Rule) => Rule.required().min(3),
+      // Убираем ограничение "минимум 3 фото" (хотя поле остаётся обязательным).
+      // Если хочешь совсем снять required — скажи, заменю на Rule.optional().
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
@@ -51,22 +53,6 @@ export default defineType({
       name: 'details',
       title: 'Детали',
       type: 'text',
-    }),
-    defineField({
-      name: 'characteristics',
-      title: 'Характеристики',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'characteristic',
-          title: 'Характеристика',
-          fields: [
-            { name: 'key', title: 'Параметр (напр. Длина)', type: 'string' },
-            { name: 'value', title: 'Значение (напр. 1000 мм)', type: 'string' },
-          ],
-        },
-      ],
     }),
   ],
   preview: {

@@ -51,17 +51,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <h3 className="text-center font-['Raleway',_sans-serif] uppercase text-[13px] font-semibold tracking-[1px] text-[#2d2d2d] mt-[5px] mb-[5px] whitespace-normal break-words leading-tight">
               {product.name}
             </h3>
-            
-            {/* Характеристики на превью */}
-            {product.characteristics && product.characteristics.length > 0 && (
-              <div className="flex flex-col items-center mb-[10px]">
-                {product.characteristics.slice(0, 2).map((char, idx) => (
-                  <span key={idx} className="text-[11px] text-gray-400 uppercase tracking-wider font-['Raleway']">
-                    {char.key}: {char.value}
-                  </span>
-                ))}
-              </div>
-            )}
 
             <p className="text-center text-[16px] font-bold text-black mb-[20px] font-['Open_Sans']">
               {product.price.toLocaleString('ru-RU')} ₽

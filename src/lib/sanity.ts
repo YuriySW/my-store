@@ -22,7 +22,6 @@ const PRODUCTS_QUERY = `*[_type == "product"] {
   "images": images[].asset->url,
   "category": category->name,
   "categorySlug": category->slug.current,
-  characteristics
 }`;
 
 export async function fetchAllProducts() {
@@ -39,7 +38,6 @@ const PRODUCTS_BY_CATEGORY_QUERY = `*[_type == "product" && category->slug.curre
   "images": images[].asset->url,
   "category": category->name,
   "categorySlug": category->slug.current,
-  characteristics
 }`;
 
 const PRODUCTS_BY_CATEGORY_SLUGS_QUERY = `*[_type == "product" && category->slug.current in $slugs] {
@@ -52,7 +50,6 @@ const PRODUCTS_BY_CATEGORY_SLUGS_QUERY = `*[_type == "product" && category->slug
   "images": images[].asset->url,
   "category": category->name,
   "categorySlug": category->slug.current,
-  characteristics
 }`;
 
 const CATEGORY_BY_SLUG_QUERY = `*[_type == "category" && slug.current == $slug][0] {
@@ -107,7 +104,6 @@ const PRODUCT_BY_SLUG_QUERY = `*[_type == "product" && slug.current == $slug][0]
   "images": images[].asset->url,
   "category": category->name,
   "categorySlug": category->slug.current,
-  characteristics,
   video,
   "drawing": drawing.asset->url,
   instructions
