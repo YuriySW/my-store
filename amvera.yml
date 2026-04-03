@@ -11,7 +11,8 @@ build:
   additionalCommands: npm run build
 
 run:
-  command: npm run start
+  # Amvera балансирует на containerPort 80; next start по умолчанию — 3000 → 502.
+  command: npx next start --hostname 0.0.0.0 --port 80
   # В панели Amvera для внутренних имён часто ждут порт 80 (не 3000).
   containerPort: 80
   servicePort: 80
