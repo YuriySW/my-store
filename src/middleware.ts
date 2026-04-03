@@ -1,7 +1,37 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+/**
+ * Если с кастомного домена из РФ не доходят до edge Vercel те же IP, что для *.vercel.app,
+ * HTML отдаётся, а `/_next/*` и `/images/*` таймаутятся. Тогда задаём в Vercel:
+ * VERCEL_ASSET_FALLBACK_HOST=my-store-five-silk.vercel.app (без https://)
+ * — браузер получит 307 на рабочий хост только для статики/картинок.
+ */
+function maybeRedirectAssetsToFallbackHost(request: NextRequest): NextResponse | null {
+  const fallback = process.env.VERCEL_ASSET_FALLBACK_HOST?.trim();
+  if (!fallback) return null;
+
+  const host = request.headers.get('host')?.split(':')[0] ?? '';
+  if (!host || host === fallback) return null;
+
+  const { pathname } = request.nextUrl;
+  const isAssetPath =
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/images/') ||
+    pathname === '/favicon.ico';
+
+  if (!isAssetPath) return null;
+
+  const u = request.nextUrl.clone();
+  u.hostname = fallback;
+  u.protocol = 'https';
+  return NextResponse.redirect(u, 307);
+}
+
 export function middleware(request: NextRequest) {
+  const assetRedirect = maybeRedirectAssetsToFallbackHost(request);
+  if (assetRedirect) return assetRedirect;
+
   // Проверяем только пути, начинающиеся с /admin
   if (request.nextUrl.pathname.startsWith('/admin')) {
     const ADMIN_USER = process.env.ADMIN_USER;
@@ -37,5 +67,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*', '/_next/:path*', '/images/:path*', '/favicon.ico'],
 };
