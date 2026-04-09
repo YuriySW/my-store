@@ -28,14 +28,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
-      className="group"
+      className="group h-full"
     >
-      <div className="flex flex-col bg-white">
+      <div className="flex h-full flex-col bg-white">
         {/* Кликабельная область карточки (переход в товар) */}
         <button
           type="button"
           onClick={handleCardClick}
-          className="flex flex-col text-left cursor-pointer"
+          className="flex flex-1 flex-col text-left cursor-pointer"
         >
           {/* Изображение товара */}
           <div className="bg-[#f5f5f5] aspect-square overflow-hidden flex items-center justify-center p-6 mb-4 rounded-sm relative">
@@ -59,7 +59,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </button>
 
         {/* Кнопка добавления в корзину — вне кликабельной области карточки */}
-        <div className="flex flex-col gap-1 px-1">
+        <div className="mt-auto flex flex-col gap-1 px-1">
           <Button
             onPress={() => {
               if (!isInCart) {
