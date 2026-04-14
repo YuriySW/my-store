@@ -11,6 +11,7 @@ build:
   additionalCommands: npm run build
 
 run:
-  # Слушаем 80; containerPort должен совпадать с портом next start.
-  command: npm run start
+  # Без npm run start: при SIGTERM при деплое npm пишет "npm error" и панель ругается на лог.
+  # Прямой вызов next — тот же процесс, без лишних строк в логе.
+  command: node node_modules/next/dist/bin/next start -p 80 -H 0.0.0.0
   containerPort: 80
