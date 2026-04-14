@@ -11,6 +11,6 @@ build:
   additionalCommands: npm run build
 
 run:
-  # Слушаем 3000; containerPort должен совпадать с портом next start.
+  # Слушаем 80; containerPort должен совпадать с портом next start.
   command: npm run start
-  containerPort: 3000
+  containerPort: 80
