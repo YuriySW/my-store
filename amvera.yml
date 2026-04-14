@@ -11,7 +11,6 @@ build:
   additionalCommands: npm run build
 
 run:
-  # Без npm run start: при SIGTERM при деплое npm пишет "npm error" и панель ругается на лог.
-  # Прямой вызов next — тот же процесс, без лишних строк в логе.
-  command: node node_modules/next/dist/bin/next start -p 80 -H 0.0.0.0
+  # scriptName → платформа запускает `node amvera-server.cjs`, не `npm start` (см. доку Amvera).
+  scriptName: amvera-server.cjs
   containerPort: 80
