@@ -5,15 +5,11 @@ meta:
   toolchain:
     name: npm
     # Sanity 5 / next-sanity 12: engines >=20.19 || >=22.12
-    version: "22"
+    version: '22'
 
 build:
   additionalCommands: npm run build
 
 run:
   # Amvera балансирует на containerPort 80; next start по умолчанию — 3000 → 502.
-  command: npx next start --hostname 0.0.0.0 --port 80
-  # В панели Amvera для внутренних имён часто ждут порт 80 (не 3000).
-  containerPort: 80
-  servicePort: 80
-  persistenceMount: /data
+  command: npm run start
