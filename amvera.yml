@@ -11,5 +11,6 @@ build:
   additionalCommands: npm run build
 
 run:
-  # Amvera балансирует на containerPort 80; next start по умолчанию — 3000 → 502.
+  # Слушаем 3000; containerPort должен совпадать с портом next start.
   command: npm run start
+  containerPort: 3000
