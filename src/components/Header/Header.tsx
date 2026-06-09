@@ -10,6 +10,7 @@ import {Input} from '@nextui-org/react';
 import {useRouter, usePathname} from 'next/navigation';
 import {useCategories} from '@/hooks/useCategories';
 import type {Product} from '@/types/catalog';
+import {productImageUrl} from '@/lib/sanityImage';
 
 export const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -217,8 +218,11 @@ export const Header = () => {
               >
                 <div className="w-12 h-12 bg-gray-100 rounded flex-shrink-0 overflow-hidden">
                   <img
-                    src={product.images?.[0]}
+                    src={productImageUrl(product.imageSources?.[0], 'thumb')}
                     alt={product.name}
+                    width={48}
+                    height={48}
+                    loading="lazy"
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -402,11 +406,14 @@ export const Header = () => {
                                     onClick={() => setIsCatalogOpen(false)}
                                     className="h-10 flex items-center gap-2 px-3 text-white/80 text-[11px] hover:bg-white/10 transition-colors font-['Open_Sans']"
                                   >
-                                    {p.images?.[0] ? (
+                                    {p.imageSources?.[0] ? (
                                       <div className="w-6 h-6 rounded overflow-hidden flex-shrink-0 bg-white/10">
                                         <img
-                                          src={p.images[0]}
+                                          src={productImageUrl(p.imageSources[0], 'thumb')}
                                           alt=""
+                                          width={24}
+                                          height={24}
+                                          loading="lazy"
                                           className="w-full h-full object-contain"
                                         />
                                       </div>
@@ -538,11 +545,14 @@ export const Header = () => {
                                             }}
                                             className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:text-red-600"
                                           >
-                                            {p.images?.[0] && (
+                                            {p.imageSources?.[0] && (
                                               <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 bg-gray-100">
                                                 <img
-                                                  src={p.images[0]}
+                                                  src={productImageUrl(p.imageSources[0], 'thumb')}
                                                   alt=""
+                                                  width={32}
+                                                  height={32}
+                                                  loading="lazy"
                                                   className="w-full h-full object-contain"
                                                 />
                                               </div>

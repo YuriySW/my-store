@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { fetchCategories } from '@/lib/sanity';
+import { productImageUrl } from '@/lib/sanityImage';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,8 +20,11 @@ export default async function ShopPage() {
             <Link key={cat.id} href={`/category/${cat.slug}`} className="group">
               <div className="bg-[#f5f5f5] p-10 mb-6 overflow-hidden flex items-center justify-center h-[300px] rounded-sm transition-all group-hover:shadow-xl">
                 <img
-                  src={cat.image || '/images/placeholder.png'}
+                  src={productImageUrl(cat.imageSource, 'category')}
                   alt={cat.name}
+                  width={600}
+                  height={600}
+                  loading="lazy"
                   className="group-hover:scale-110 transition-transform duration-700 object-contain h-full mix-blend-multiply"
                 />
               </div>

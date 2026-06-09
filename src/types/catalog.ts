@@ -1,8 +1,10 @@
+import type {SanityImageSource} from '@/lib/sanityImage';
+
 export interface Category {
   id: string;
   name: string;
   slug: string;
-  image?: string;
+  imageSource?: SanityImageSource;
   subcategories?: Category[];
 }
 
@@ -13,13 +15,13 @@ export interface Product {
   price: number;
   description: string;
   details?: string;
-  images: string[];
+  imageSources: SanityImageSource[];
   category: string;
   categorySlug: string;
   /** URL видео (YouTube, Vimeo и т.д.) */
   video?: string;
-  /** URL изображения или PDF чертежа */
-  drawing?: string;
+  /** Изображение или PDF чертежа */
+  drawingSource?: SanityImageSource;
   /** URL PDF инструкции или текст */
   instructions?: string;
 }

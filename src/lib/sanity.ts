@@ -1,6 +1,6 @@
 import {createClient} from '@sanity/client';
-import type {Product} from '@/types/catalog';
-import type {Category} from '@/types/catalog';
+import type {Product, Category} from '@/types/catalog';
+import type {SanityImageSource} from './sanityImage';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'i6jto0ep';
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
@@ -12,6 +12,11 @@ export const sanityClient = createClient({
   apiVersion: '2023-05-03',
 });
 
+const IMAGE_ASSET = `{
+  "_id": _id,
+  "url": url
+}`;
+
 const PRODUCTS_QUERY = `*[_type == "product"] {
   "id": _id,
   name,
@@ -19,12 +24,12 @@ const PRODUCTS_QUERY = `*[_type == "product"] {
   price,
   description,
   details,
-  "images": images[].asset->url,
+  "imageSources": images[].asset->${IMAGE_ASSET},
   "category": category->name,
   "categorySlug": category->slug.current,
 }`;
 
-export async function fetchAllProducts() {
+export async function fetchAllProducts(): Promise<Product[]> {
   return sanityClient.fetch(PRODUCTS_QUERY);
 }
 
@@ -35,7 +40,7 @@ const PRODUCTS_BY_CATEGORY_QUERY = `*[_type == "product" && category->slug.curre
   price,
   description,
   details,
-  "images": images[].asset->url,
+  "imageSources": images[].asset->${IMAGE_ASSET},
   "category": category->name,
   "categorySlug": category->slug.current,
 }`;
@@ -47,7 +52,7 @@ const PRODUCTS_BY_CATEGORY_SLUGS_QUERY = `*[_type == "product" && category->slug
   price,
   description,
   details,
-  "images": images[].asset->url,
+  "imageSources": images[].asset->${IMAGE_ASSET},
   "category": category->name,
   "categorySlug": category->slug.current,
 }`;
@@ -56,12 +61,12 @@ const CATEGORY_BY_SLUG_QUERY = `*[_type == "category" && slug.current == $slug][
   "id": _id,
   name,
   "slug": slug.current,
-  "image": image.asset->url,
+  "imageSource": image.asset->${IMAGE_ASSET},
   "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
     "id": _id,
     name,
     "slug": slug.current,
-    "image": image.asset->url
+    "imageSource": image.asset->${IMAGE_ASSET}
   }
 }`;
 
@@ -82,12 +87,12 @@ const CATEGORIES_QUERY = `*[_type == "category" && !defined(parent)] | order(nam
   "id": _id,
   name,
   "slug": slug.current,
-  "image": image.asset->url,
+  "imageSource": image.asset->${IMAGE_ASSET},
   "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
     "id": _id,
     name,
     "slug": slug.current,
-    "image": image.asset->url
+    "imageSource": image.asset->${IMAGE_ASSET}
   }
 }`;
 
@@ -101,20 +106,22 @@ const PRODUCT_BY_SLUG_QUERY = `*[_type == "product" && slug.current == $slug][0]
   price,
   description,
   details,
-  "images": images[].asset->url,
+  "imageSources": images[].asset->${IMAGE_ASSET},
   "category": category->name,
   "categorySlug": category->slug.current,
   video,
-  "drawing": drawing.asset->url,
+  "drawingSource": drawing.asset->${IMAGE_ASSET},
   instructions
 }`;
 
 const PRODUCT_META_QUERY = `*[_type == "product" && slug.current == $slug][0] { name, description }`;
 
-export async function getProductBySlug(slug: string) {
+export async function getProductBySlug(slug: string): Promise<Product | null> {
   return sanityClient.fetch(PRODUCT_BY_SLUG_QUERY, {slug});
 }
 
 export async function getProductMeta(slug: string) {
   return sanityClient.fetch(PRODUCT_META_QUERY, {slug});
 }
+
+export type {SanityImageSource};

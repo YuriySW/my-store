@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { addToCart } from '@/store/slices/cartSlice';
 import { RootState } from '@/store/store';
 import type { Product } from '@/types/catalog';
+import { productImageUrl } from '@/lib/sanityImage';
 import { ShoppingCart } from 'lucide-react';
 
 interface ProductCardProps {
@@ -40,8 +41,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Изображение товара */}
           <div className="bg-[#f5f5f5] aspect-square overflow-hidden flex items-center justify-center p-6 mb-4 rounded-sm relative">
             <img
-              src={product.images?.[0] || '/images/placeholder.png'}
+              src={productImageUrl(product.imageSources?.[0], 'card')}
               alt={product.name}
+              width={400}
+              height={400}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-700"
             />
           </div>

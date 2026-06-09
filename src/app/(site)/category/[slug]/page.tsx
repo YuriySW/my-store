@@ -2,6 +2,7 @@ import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {ProductCard} from '@/components/ProductCard/ProductCard';
 import {getCategoryBySlug, fetchProductsByCategorySlugs} from '@/lib/sanity';
+import {productImageUrl} from '@/lib/sanityImage';
 
 export default async function CategoryPage({params}: {params: Promise<{slug: string}>}) {
   const {slug} = await params;
@@ -28,8 +29,11 @@ export default async function CategoryPage({params}: {params: Promise<{slug: str
                 <Link key={sub.id} href={`/category/${sub.slug}`} className="group">
                   <div className="bg-[#f5f5f5] p-10 mb-6 overflow-hidden flex items-center justify-center h-[300px] rounded-sm transition-all group-hover:shadow-xl">
                     <img
-                      src={sub.image || '/images/placeholder.png'}
+                      src={productImageUrl(sub.imageSource, 'category')}
                       alt={sub.name}
+                      width={600}
+                      height={600}
+                      loading="lazy"
                       className="group-hover:scale-110 transition-transform duration-700 object-contain h-full mix-blend-multiply"
                     />
                   </div>

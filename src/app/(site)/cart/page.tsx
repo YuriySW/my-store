@@ -8,6 +8,7 @@ import { Trash2, Minus, Plus, ShoppingBag, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { CallbackModal } from '@/components/UI/CallbackModal';
 import { useDisclosure } from '@nextui-org/react';
+import { productImageUrl } from '@/lib/sanityImage';
 
 export default function CartPage() {
   const { items, total } = useSelector((state: RootState) => state.cart);
@@ -52,8 +53,11 @@ export default function CartPage() {
               <CardBody className="flex flex-row gap-4 lg:gap-6 p-3 lg:p-4 items-center">
                 <div className="w-20 h-20 lg:w-[120px] lg:h-[120px] bg-[#f5f5f5] rounded-lg overflow-hidden flex items-center justify-center flex-shrink-0">
                   <img
-                    src={item.images?.[0] || '/images/placeholder.png'}
+                    src={productImageUrl(item.imageSources?.[0], 'thumb')}
                     alt={item.name}
+                    width={120}
+                    height={120}
+                    loading="lazy"
                     className="w-full h-full object-contain mix-blend-multiply"
                   />
                 </div>

@@ -9,6 +9,7 @@ import {CallbackModal} from '@/components/UI/CallbackModal';
 import {RootState} from '@/store/store';
 import Link from 'next/link';
 import type {Product} from '@/types/catalog';
+import {productImageUrl} from '@/lib/sanityImage';
 
 interface ProductClientProps {
   product: Product & {_id?: string};
@@ -21,7 +22,7 @@ export default function ProductClient({product}: ProductClientProps) {
   const [thumbnailStart, setThumbnailStart] = useState(0);
   type TabId = 'description' | 'details' | 'reviews' | 'video' | 'drawing' | 'instructions';
   const [activeTab, setActiveTab] = useState<TabId>('description');
-  const images = product.images ?? [];
+  const images = product.imageSources ?? [];
   const hasManyImages = images.length > THUMBNAILS_VISIBLE;
   const dispatch = useDispatch();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -79,12 +80,16 @@ export default function ProductClient({product}: ProductClientProps) {
           }}
         >
           <img
-            src={product.images?.[currentImageIndex]}
+            src={productImageUrl(images[currentImageIndex], 'gallery')}
             alt={product.name}
+            width={900}
+            height={600}
+            loading="eager"
+            decoding="async"
             className="w-full h-auto max-h-[600px] object-contain mix-blend-multiply transition-all duration-500"
           />
 
-          {product.images?.length > 1 && (
+          {images.length > 1 && (
             <>
               <button
                 onClick={prevImage}
@@ -178,7 +183,7 @@ export default function ProductClient({product}: ProductClientProps) {
             </>
           )}
           <div className="grid grid-cols-4 gap-4">
-            {(hasManyImages ? images.slice(thumbnailStart, thumbnailStart + THUMBNAILS_VISIBLE) : images).map((img: string, idx: number) => {
+            {(hasManyImages ? images.slice(thumbnailStart, thumbnailStart + THUMBNAILS_VISIBLE) : images).map((img, idx: number) => {
               const realIndex = hasManyImages ? thumbnailStart + idx : idx;
               return (
                 <div
@@ -187,8 +192,12 @@ export default function ProductClient({product}: ProductClientProps) {
                   className={`bg-[#f5f5f5] p-2 cursor-pointer transition-all border-2 rounded-sm ${currentImageIndex === realIndex ? 'border-black' : 'border-transparent hover:border-gray-200'}`}
                 >
                   <img
-                    src={img}
+                    src={productImageUrl(img, 'thumb')}
                     alt={`${product.name} ${realIndex + 1}`}
+                    width={120}
+                    height={120}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-20 md:h-28 object-contain mix-blend-multiply"
                   />
                 </div>
@@ -276,10 +285,10 @@ export default function ProductClient({product}: ProductClientProps) {
           )}
           {activeTab === 'drawing' && (
             <div>
-              {product.drawing ? (
-                product.drawing.match(/\.(pdf|PDF)$/) ? (
+              {product.drawingSource?.url ? (
+                product.drawingSource.url.match(/\.(pdf|PDF)(\?|$)/) ? (
                   <a
-                    href={product.drawing}
+                    href={product.drawingSource.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-red-600 font-medium hover:underline"
@@ -287,8 +296,15 @@ export default function ProductClient({product}: ProductClientProps) {
                     Скачать чертеж (PDF)
                   </a>
                 ) : (
-                  <a href={product.drawing} target="_blank" rel="noopener noreferrer" className="block">
-                    <img src={product.drawing} alt="Чертеж" className="max-w-full h-auto rounded-sm border border-gray-200" />
+                  <a href={productImageUrl(product.drawingSource, 'drawing')} target="_blank" rel="noopener noreferrer" className="block">
+                    <img
+                      src={productImageUrl(product.drawingSource, 'drawing')}
+                      alt="Чертеж"
+                      width={1200}
+                      height={800}
+                      loading="lazy"
+                      className="max-w-full h-auto rounded-sm border border-gray-200"
+                    />
                   </a>
                 )
               ) : (
