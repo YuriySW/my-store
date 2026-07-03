@@ -40,9 +40,6 @@ export default defineType({
       title: 'Изображения товара',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
-      // Убираем ограничение "минимум 3 фото" (хотя поле остаётся обязательным).
-      // Если хочешь совсем снять required — скажи, заменю на Rule.optional().
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
