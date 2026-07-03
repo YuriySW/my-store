@@ -35,7 +35,7 @@ export default defineConfig({
       },
       {
         id: 'product-by-category',
-        title: 'Товар (в выбранной подкатегории)',
+        title: 'Товар (в выбранной категории)',
         schemaType: 'product',
         parameters: [{ name: 'categoryId', title: 'Category id', type: 'string' }],
         value: ({ categoryId }: { categoryId: string }) => ({

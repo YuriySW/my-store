@@ -10,7 +10,15 @@ import {
   Button,
   Input,
 } from '@nextui-org/react';
-import { Phone, User, CheckCircle2, X } from 'lucide-react';
+import { CheckCircle2, X } from 'lucide-react';
+import {
+  filterName,
+  formatRuPhone,
+  isValidCallbackName,
+  isValidRuPhoneDigits,
+  parseRuPhoneDigits,
+  toRuPhoneE164,
+} from '@/lib/callbackForm';
 
 interface CallbackModalProps {
   isOpen: boolean;
@@ -23,17 +31,29 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
   onOpenChange,
   productName,
 }) => {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
-  const [phone, setPhone] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [phoneDigits, setPhoneDigits] = useState('');
   const [name, setName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const phone = formatRuPhone(phoneDigits);
+  const canSubmit = isValidCallbackName(name) && isValidRuPhoneDigits(phoneDigits);
 
   const handleSubmit = async () => {
+    if (!canSubmit) return;
+
     setStatus('loading');
+    setErrorMessage('');
+
     try {
       const res = await fetch('/api/callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, productName }),
+        body: JSON.stringify({
+          name,
+          phone: toRuPhoneE164(phoneDigits),
+          productName,
+        }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -41,8 +61,8 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
       }
       setStatus('success');
     } catch (e) {
-      setStatus('idle');
-      console.error(e);
+      setStatus('error');
+      setErrorMessage(e instanceof Error ? e.message : 'Ошибка отправки');
     }
   };
 
@@ -51,7 +71,8 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
     setTimeout(() => {
       setStatus('idle');
       setName('');
-      setPhone('');
+      setPhoneDigits('');
+      setErrorMessage('');
     }, 300);
   };
 
@@ -116,7 +137,10 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
                       placeholder="Иван"
                       radius="lg"
                       value={name}
-                      onValueChange={setName}
+                      maxLength={15}
+                      inputMode="text"
+                      autoComplete="name"
+                      onValueChange={(value) => setName(filterName(value))}
                       classNames={{
                         input: "text-black font-medium placeholder:text-gray-300",
                         inputWrapper: [
@@ -138,7 +162,9 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
                       placeholder="+7 (___) ___-__-__"
                       radius="lg"
                       value={phone}
-                      onValueChange={setPhone}
+                      inputMode="tel"
+                      autoComplete="tel"
+                      onValueChange={(value) => setPhoneDigits(parseRuPhoneDigits(value))}
                       classNames={{
                         input: "text-black font-medium placeholder:text-gray-300",
                         inputWrapper: [
@@ -154,11 +180,17 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({
                     />
                   </div>
 
+                  {errorMessage && (
+                    <p className="text-[12px] text-center text-red-500 font-['Open_Sans']">
+                      {errorMessage}
+                    </p>
+                  )}
+
                   <Button
                     className="w-full bg-black text-white h-[60px] rounded-xl font-bold uppercase tracking-[0.15em] text-[13px] mt-4 shadow-xl shadow-black/10 hover:bg-red-600 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
                     isLoading={status === 'loading'}
                     onPress={handleSubmit}
-                    isDisabled={!phone || !name}
+                    isDisabled={!canSubmit}
                   >
                     Жду звонка
                   </Button>
