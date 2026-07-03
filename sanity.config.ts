@@ -1,6 +1,7 @@
 import { defineConfig } from 'sanity';
 import { deskTool } from 'sanity/desk';
 import { visionTool } from '@sanity/vision';
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list';
 import { schemaTypes } from './src/sanity/schemaTypes';
 import { deskStructure } from './src/sanity/deskStructure';
 
@@ -21,7 +22,19 @@ export default defineConfig({
   ],
 
   schema: {
-    types: schemaTypes,
+    types: (_types, context) =>
+      schemaTypes.map((schemaType) => {
+        if (schemaType.name !== 'product') return schemaType;
+
+        return {
+          ...schemaType,
+          orderings: [orderRankOrdering],
+          fields: [
+            orderRankField({ type: 'product' }),
+            ...(schemaType.fields ?? []),
+          ],
+        };
+      }),
     templates: (prev) => [
       ...prev,
       {

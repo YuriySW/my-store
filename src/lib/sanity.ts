@@ -17,7 +17,7 @@ const IMAGE_ASSET = `{
   "url": url
 }`;
 
-const PRODUCTS_QUERY = `*[_type == "product"] {
+const PRODUCTS_QUERY = `*[_type == "product"] | order(orderRank asc, name asc) {
   "id": _id,
   name,
   "slug": slug.current,
@@ -33,7 +33,7 @@ export async function fetchAllProducts(): Promise<Product[]> {
   return sanityClient.fetch(PRODUCTS_QUERY);
 }
 
-const PRODUCTS_BY_CATEGORY_QUERY = `*[_type == "product" && category->slug.current == $slug] {
+const PRODUCTS_BY_CATEGORY_QUERY = `*[_type == "product" && category->slug.current == $slug] | order(orderRank asc, name asc) {
   "id": _id,
   name,
   "slug": slug.current,
@@ -45,7 +45,7 @@ const PRODUCTS_BY_CATEGORY_QUERY = `*[_type == "product" && category->slug.curre
   "categorySlug": category->slug.current,
 }`;
 
-const PRODUCTS_BY_CATEGORY_SLUGS_QUERY = `*[_type == "product" && category->slug.current in $slugs] {
+const PRODUCTS_BY_CATEGORY_SLUGS_QUERY = `*[_type == "product" && category->slug.current in $slugs] | order(orderRank asc, name asc) {
   "id": _id,
   name,
   "slug": slug.current,

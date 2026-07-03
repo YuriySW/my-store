@@ -1,6 +1,24 @@
 import type { StructureResolver } from 'sanity/desk'
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 
-export const deskStructure: StructureResolver = (S) =>
+function orderableProductsInCategory(
+  S: Parameters<StructureResolver>[0],
+  context: Parameters<StructureResolver>[1],
+  categoryId: string,
+  listId: string,
+) {
+  return orderableDocumentListDeskItem({
+    type: 'product',
+    title: 'Товары',
+    id: listId,
+    filter: `_type == "product" && category._ref == $categoryId`,
+    params: { categoryId },
+    S,
+    context,
+  })
+}
+
+export const deskStructure: StructureResolver = (S, context) =>
   S.list()
     .title('Content')
     .items([
@@ -20,21 +38,12 @@ export const deskStructure: StructureResolver = (S) =>
                       S.document().schemaType('category').documentId(parentCategoryId),
                     ),
                   S.divider(),
-                  S.listItem()
-                    .title('Товары')
-                    .child(
-                      S.documentTypeList('product')
-                        .title('Товары')
-                        .filter(
-                          `_type == "product" && category._ref == $parentCategoryId`,
-                        )
-                        .params({ parentCategoryId })
-                        .initialValueTemplates([
-                          S.initialValueTemplateItem('product-by-category', {
-                            categoryId: parentCategoryId,
-                          }),
-                        ]),
-                    ),
+                  orderableProductsInCategory(
+                    S,
+                    context,
+                    parentCategoryId,
+                    `orderable-products-parent-${parentCategoryId}`,
+                  ),
                   S.listItem()
                     .title('Подкатегории')
                     .child(
@@ -59,21 +68,12 @@ export const deskStructure: StructureResolver = (S) =>
                                     .documentId(subcategoryId),
                                 ),
                               S.divider(),
-                              S.listItem()
-                                .title('Товары')
-                                .child(
-                                  S.documentTypeList('product')
-                                    .title('Товары')
-                                    .filter(
-                                      `_type == "product" && category._ref == $subcategoryId`,
-                                    )
-                                    .params({ subcategoryId })
-                                    .initialValueTemplates([
-                                      S.initialValueTemplateItem('product-by-category', {
-                                        categoryId: subcategoryId,
-                                      }),
-                                    ]),
-                                ),
+                              orderableProductsInCategory(
+                                S,
+                                context,
+                                subcategoryId,
+                                `orderable-products-sub-${subcategoryId}`,
+                              ),
                             ]),
                         ),
                     ),
@@ -81,7 +81,13 @@ export const deskStructure: StructureResolver = (S) =>
             ),
         ),
       S.divider(),
-      S.listItem().title('Все товары').child(S.documentTypeList('product').title('Все товары')),
+      orderableDocumentListDeskItem({
+        type: 'product',
+        title: 'Все товары',
+        id: 'orderable-all-products',
+        S,
+        context,
+      }),
       S.listItem()
         .title('Товары без категории')
         .child(
@@ -91,4 +97,3 @@ export const deskStructure: StructureResolver = (S) =>
             .filter(`_type == "product" && !defined(category)`),
         ),
     ])
-
