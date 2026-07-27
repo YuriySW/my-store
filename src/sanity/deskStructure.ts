@@ -27,7 +27,8 @@ function orderableProductsInCategory(
             template: 'product-by-category',
             categoryId,
           },
-        }),
+        })
+        .serialize(),
     ],
     S,
     context,
@@ -39,7 +40,7 @@ function categoryPane(
   context: Parameters<StructureResolver>[1],
   categoryId: string,
   title: string,
-) {
+): ReturnType<Parameters<StructureResolver>[0]['list']> {
   return S.list()
     .title(title)
     .items([
