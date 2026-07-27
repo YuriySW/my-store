@@ -307,19 +307,43 @@ export const Header = () => {
                     }}
                   >
                     <div className="flex items-start">
+                      {(() => {
+                        const hoveredCat =
+                          categories.find((c) => c.id === hoveredCatId) ?? null;
+                        const hoveredHasSubs = (hoveredCat?.subcategories?.length ?? 0) > 0;
+                        const panelProducts = hoveredSubSlug
+                          ? (productsByCategorySlug.get(hoveredSubSlug) ?? [])
+                          : [];
+                        const showProductsPanel = panelProducts.length > 0;
+                        const showSidePanel = hoveredHasSubs || showProductsPanel;
+
+                        return (
+                          <>
                       {/* Колонка 1: категории */}
                       <div
                         className={`w-[260px] bg-[#333] overflow-y-auto max-h-[80vh] overflow-hidden shadow-xl ${
-                          hoveredCatId ? 'rounded-l-md' : 'rounded-md'
+                          showSidePanel ? 'rounded-l-md' : 'rounded-md'
                         }`}
                       >
-                        {categories.map((cat) => (
+                        {categories.map((cat) => {
+                          const hasSubs = (cat.subcategories?.length ?? 0) > 0;
+                          const hasProducts =
+                            (productsByCategorySlug.get(cat.slug)?.length ?? 0) > 0;
+                          const showChevron = hasSubs || hasProducts;
+                          return (
                           <div
                             key={cat.id}
                             className="relative"
                             onMouseEnter={() => {
                               setHoveredCatId(cat.id);
-                              setHoveredSubSlug(null);
+                              if (hasSubs) {
+                                setHoveredSubSlug(null);
+                              } else if (hasProducts) {
+                                // без подкатегорий — сразу выезжают товары
+                                setHoveredSubSlug(cat.slug);
+                              } else {
+                                setHoveredSubSlug(null);
+                              }
                             }}
                           >
                             <button
@@ -328,7 +352,7 @@ export const Header = () => {
                               className="h-10 px-3 text-left text-white text-[13px] font-normal hover:bg-red-600 transition-colors font-['Open_Sans'] w-full flex items-center justify-between"
                             >
                               {cat.name}
-                              {cat.subcategories?.length ? (
+                              {showChevron ? (
                                 <ChevronRight
                                   size={14}
                                   className={`opacity-70 transition-transform ${hoveredCatId === cat.id ? 'translate-x-0.5' : ''}`}
@@ -336,7 +360,8 @@ export const Header = () => {
                               ) : null}
                             </button>
                           </div>
-                        ))}
+                          );
+                        })}
                         <NextLink
                           href="/shop"
                           onClick={() => setIsCatalogOpen(false)}
@@ -346,19 +371,16 @@ export const Header = () => {
                         </NextLink>
                       </div>
 
-                      {/* Колонка 2: подкатегории */}
-                      {hoveredCatId ? (
+                      {/* Колонка 2: подкатегории (только если есть) */}
+                      {hoveredHasSubs ? (
                         <div
                           className={`w-[260px] bg-[#333] border-l border-white/10 overflow-y-auto max-h-[80vh] overflow-hidden ${
-                            hoveredSubSlug &&
-                            (productsByCategorySlug.get(hoveredSubSlug)?.length ?? 0) > 0
+                            showProductsPanel
                               ? 'shadow-none'
                               : 'rounded-r-md shadow-xl'
                           }`}
                         >
-                          {categories
-                            .find((c) => c.id === hoveredCatId)
-                            ?.subcategories?.map((sub) => {
+                          {hoveredCat?.subcategories?.map((sub) => {
                               const subProducts = productsByCategorySlug.get(sub.slug) ?? [];
                               const isSubHovered = hoveredSubSlug === sub.slug;
                               return (
@@ -389,14 +411,12 @@ export const Header = () => {
                         </div>
                       ) : null}
 
-                      {/* Колонка 3: товары */}
-                      {hoveredSubSlug &&
-                      (productsByCategorySlug.get(hoveredSubSlug)?.length ?? 0) > 0 ? (
+                      {/* Колонка 3: товары (подкатегория ИЛИ категория без подкатегорий) */}
+                      {showProductsPanel ? (
                         <div className="w-[320px] bg-[#333] border-l border-white/10 overflow-y-auto max-h-[80vh] overflow-hidden rounded-r-md shadow-xl">
                           {(() => {
-                            const subProducts = productsByCategorySlug.get(hoveredSubSlug) ?? [];
-                            const showProducts = subProducts.slice(0, 10);
-                            const hasMore = subProducts.length > 10;
+                            const showProducts = panelProducts.slice(0, 10);
+                            const hasMore = panelProducts.length > 10;
                             return (
                               <>
                                 {showProducts.map((p) => (
@@ -424,7 +444,7 @@ export const Header = () => {
                                     </span>
                                   </NextLink>
                                 ))}
-                                {hasMore ? (
+                                {hasMore && hoveredSubSlug ? (
                                   <NextLink
                                     href={`/category/${hoveredSubSlug}`}
                                     onClick={() => setIsCatalogOpen(false)}
@@ -438,6 +458,9 @@ export const Header = () => {
                           })()}
                         </div>
                       ) : null}
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 )}
@@ -483,35 +506,43 @@ export const Header = () => {
                     </div>
                     {isMobileCatalogOpen && (
                       <div className="flex flex-col gap-4 pl-4 animate-in slide-in-from-top-2 duration-500">
-                        {categories.map((cat) => (
+                        {categories.map((cat) => {
+                          const hasSubs = (cat.subcategories?.length ?? 0) > 0;
+                          const catProducts = productsByCategorySlug.get(cat.slug) ?? [];
+                          const hasProducts = catProducts.length > 0;
+                          const isExpanded = expandedMobileCategoryId === cat.id;
+
+                          return (
                           <div key={cat.id}>
                             <div
                               onClick={() => {
-                                setExpandedMobileCategoryId((id) =>
-                                  id === cat.id ? null : cat.id,
-                                );
-                                setExpandedSubSlug(null);
+                                if (hasSubs || hasProducts) {
+                                  setExpandedMobileCategoryId((id) =>
+                                    id === cat.id ? null : cat.id,
+                                  );
+                                  setExpandedSubSlug(null);
+                                } else {
+                                  handleCategoryClick(cat.slug);
+                                }
                               }}
                               className="flex items-center justify-between text-lg text-gray-600 border-b border-gray-100 pb-2 cursor-pointer"
                             >
                               <span>{cat.name}</span>
-                              {cat.subcategories?.length ? (
+                              {hasSubs || hasProducts ? (
                                 <ChevronRight
                                   size={20}
                                   className={`flex-shrink-0 text-gray-400 transition-transform ${
-                                    expandedMobileCategoryId === cat.id ? 'rotate-90' : ''
+                                    isExpanded ? 'rotate-90' : ''
                                   }`}
                                 />
                               ) : null}
                             </div>
-                            {expandedMobileCategoryId === cat.id &&
-                              cat.subcategories?.map((sub) => {
-                                const subProducts = products.filter(
-                                  (p) => p.categorySlug === sub.slug,
-                                );
+                            {isExpanded && hasSubs
+                              ? cat.subcategories?.map((sub) => {
+                                const subProducts = productsByCategorySlug.get(sub.slug) ?? [];
                                 const showProducts = subProducts.slice(0, 10);
                                 const hasMore = subProducts.length > 10;
-                                const isExpanded = expandedSubSlug === sub.slug;
+                                const isSubExpanded = expandedSubSlug === sub.slug;
                                 return (
                                   <div key={sub.id} className="border-b border-gray-50">
                                     <div
@@ -527,12 +558,12 @@ export const Header = () => {
                                         <ChevronRight
                                           size={18}
                                           className={`flex-shrink-0 transition-transform text-gray-400 ${
-                                            isExpanded ? 'rotate-90' : ''
+                                            isSubExpanded ? 'rotate-90' : ''
                                           }`}
                                         />
                                       )}
                                     </div>
-                                    {isExpanded && (
+                                    {isSubExpanded && (
                                       <div className="pl-6 pb-2 flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
                                         {showProducts.map((p) => (
                                           <NextLink
@@ -580,9 +611,57 @@ export const Header = () => {
                                     )}
                                   </div>
                                 );
-                              })}
+                              })
+                              : null}
+                            {isExpanded && !hasSubs && hasProducts ? (
+                              <div className="pl-4 pb-2 flex flex-col gap-1 animate-in slide-in-from-top-1 duration-200">
+                                {catProducts.slice(0, 10).map((p) => (
+                                  <NextLink
+                                    key={p.id}
+                                    href={`/product/${p.slug}`}
+                                    onClick={() => {
+                                      setIsMenuOpen(false);
+                                      setExpandedMobileCategoryId(null);
+                                      setExpandedSubSlug(null);
+                                    }}
+                                    className="flex items-center gap-2 py-2 text-sm text-gray-600 hover:text-red-600 border-b border-gray-50"
+                                  >
+                                    {p.imageSources?.[0] && (
+                                      <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0 bg-gray-100">
+                                        <img
+                                          src={productImageUrl(p.imageSources[0], 'thumb')}
+                                          alt=""
+                                          width={32}
+                                          height={32}
+                                          loading="lazy"
+                                          className="w-full h-full object-contain"
+                                        />
+                                      </div>
+                                    )}
+                                    <span className="truncate flex-1">{p.name}</span>
+                                    <span className="text-red-600 text-xs font-medium flex-shrink-0">
+                                      {p.price.toLocaleString('ru-RU')} ₽
+                                    </span>
+                                  </NextLink>
+                                ))}
+                                {catProducts.length > 10 ? (
+                                  <NextLink
+                                    href={`/category/${cat.slug}`}
+                                    onClick={() => {
+                                      setIsMenuOpen(false);
+                                      setExpandedMobileCategoryId(null);
+                                      setExpandedSubSlug(null);
+                                    }}
+                                    className="py-2 text-sm font-bold text-red-600"
+                                  >
+                                    Остальной товар
+                                  </NextLink>
+                                ) : null}
+                              </div>
+                            ) : null}
                           </div>
-                        ))}
+                          );
+                        })}
                         <div
                           onClick={() => {
                             setIsMenuOpen(false);

@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { AdvantagesSection } from '@/components/UI/AdvantagesSection';
-import { FeaturesBlock } from '@/components/UI/FeaturesBlock';
-import { AboutUsSection } from '@/components/UI/AboutUsSection';
-import { fetchCategories } from '@/lib/sanity';
-import { productImageUrl } from '@/lib/sanityImage';
+import {AdvantagesSection} from '@/components/UI/AdvantagesSection';
+import {FeaturesBlock} from '@/components/UI/FeaturesBlock';
+import {AboutUsSection} from '@/components/UI/AboutUsSection';
+import {fetchCategories} from '@/lib/sanity';
+import {productImageUrl} from '@/lib/sanityImage';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,38 +13,38 @@ export default async function Home() {
   return (
     <main className="text-black">
       <div className="w-full bg-[#f5f5f5]">
-        {/* Десктопный герой: картинка + текст поверх справа */}
-        <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] max-[760px]:hidden">
+        {/* Десктоп (lg+): картинка + текст справа без карточки */}
+        <section className="relative w-[100vw] max-w-none overflow-hidden ml-[calc(50%-50vw)] min-h-[280px] hidden lg:block">
           <img
             src="/images/hero-fireplace.png"
             alt="Биокамин Fireline"
-            className="w-full min-h-[280px] object-cover object-center md:object-left lg:object-[35%] bg-[#f5f5f5]"
+            className="w-full min-h-[280px] object-cover object-[30%] bg-[#f5f5f5]"
           />
           <div className="absolute inset-0 z-10 flex items-start pointer-events-none pt-[clamp(5rem,14vh,10.25rem)]">
             <div className="pointer-events-auto max-w-[1200px] mx-auto w-full px-[clamp(0.75rem,4vw,1.5rem)] flex justify-end box-border">
               <div
-                className="text-right min-w-0"
-                style={{ maxWidth: 'clamp(8.75rem, 35vw, 28rem)' }}
+                className="min-w-0 text-right"
+                style={{maxWidth: 'clamp(14rem, 32vw, 24rem)'}}
               >
-                <p
-                  className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase"
-                  style={{ fontSize: 'clamp(0.8125rem, 1.8vw + 0.5rem, 1.875rem)' }}
+                <h1
+                  className="font-['Raleway',_-apple-system,_BlinkMacSystemFont,'Segoe_UI',sans-serif] font-bold text-[#1d1d1f] tracking-[-0.035em] leading-[1.08]"
+                  style={{fontSize: 'clamp(1.25rem, 1.6vw + 0.55rem, 2.1rem)'}}
                 >
                   Премиальные камины по адекватным ценам
-                </p>
+                </h1>
                 <p
-                  className="mt-[clamp(0.375rem,1vw,0.625rem)] font-['Raleway',_sans-serif] text-black/80 leading-snug"
-                  style={{ fontSize: 'clamp(0.6875rem, 1vw + 0.4rem, 0.875rem)' }}
+                  className="mt-[clamp(0.5rem,1vw,0.75rem)] ml-auto font-['Raleway',_-apple-system,_BlinkMacSystemFont,'Segoe_UI',sans-serif] font-normal text-[#1d1d1f]/80 tracking-[-0.01em] leading-[1.35]"
+                  style={{
+                    fontSize: 'clamp(0.8125rem, 0.4vw + 0.65rem, 0.95rem)',
+                    maxWidth: '22rem',
+                  }}
                 >
-                  Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт характер и создаёт особую атмосферу в любом интерьере.
+                  Наши камины это не просто источник тепла. Это дизайнерский элемент, который
+                  придаёт характер и создаёт особую атмосферу в любом интерьере.
                 </p>
                 <Link
                   href="/shop"
-                  className="inline-block mt-[clamp(0.5rem,1.5vw,1rem)] bg-red-600 text-white font-['Raleway',_sans-serif] font-bold uppercase tracking-[0.15em] rounded-lg shadow-lg shadow-red-900/30 hover:bg-red-500 hover:shadow-xl hover:shadow-red-900/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
-                  style={{
-                    padding: 'clamp(0.375rem, 1.2vw, 0.875rem) clamp(0.75rem, 3vw, 2rem)',
-                    fontSize: 'clamp(0.5625rem, 1.2vw + 0.35rem, 0.8125rem)',
-                  }}
+                  className="mt-[clamp(0.75rem,1.5vw,1.15rem)] inline-flex items-center justify-center rounded-full bg-[#e10600] px-6 py-2.5 font-['Raleway',_-apple-system,_BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[14px] font-medium text-white tracking-[-0.01em] shadow-[0_4px_14px_rgba(225,6,0,0.28)] transition-all duration-300 hover:bg-[#c90500] hover:-translate-y-0.5 active:translate-y-0"
                 >
                   В каталог
                 </Link>
@@ -53,24 +53,25 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Мобильный герой: картинка сверху, текст и кнопка под ней */}
-        <section className="w-full max-[760px]:block hidden">
+        {/* Планшет / моб: картинка сверху, текст снизу — без перекрытия */}
+        <section className="w-full lg:hidden">
           <div className="max-w-[1200px] mx-auto w-full px-4 pt-4 pb-6">
             <img
               src="/images/hero-fireplace.png"
               alt="Биокамин Fireline"
-              className="w-full h-auto mb-4 object-contain bg-[#f5f5f5]"
+              className="w-full h-auto mb-5 object-contain bg-[#f5f5f5]"
             />
-            <div className="text-center">
-              <p className="font-['Raleway',_sans-serif] font-semibold tracking-tight text-black leading-tight uppercase text-[18px]">
+            <div className="text-center sm:text-left sm:max-w-xl sm:mx-auto">
+              <h1 className="font-['Raleway',_-apple-system,_BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[24px] sm:text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-[#1d1d1f]">
                 Премиальные камины по адекватным ценам
-              </p>
-              <p className="mt-2 hyphens-auto text-justify font-['Raleway',_sans-serif] text-black/80 leading-snug text-[13px]">
-                Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт характер и создаёт особую атмосферу в любом интерьере.
+              </h1>
+              <p className="mt-3 font-['Raleway',_-apple-system,_BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[15px] font-normal leading-[1.4] tracking-[-0.01em] text-[#1d1d1f]/80">
+                Наши камины это не просто источник тепла. Это дизайнерский элемент, который придаёт
+                характер и создаёт особую атмосферу в любом интерьере.
               </p>
               <Link
                 href="/shop"
-                className="inline-block mt-4 bg-red-600 text-white font-['Raleway',_sans-serif] font-bold uppercase tracking-[0.15em] rounded-lg shadow-lg shadow-red-900/30 hover:bg-red-500 hover:shadow-xl hover:shadow-red-900/40 transition-all duration-300 px-6 py-2 text-[11px]"
+                className="mt-5 inline-flex items-center justify-center rounded-full bg-[#e10600] px-7 py-2.5 font-['Raleway',_-apple-system,_BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[15px] font-medium text-white tracking-[-0.01em] shadow-[0_4px_14px_rgba(225,6,0,0.28)] transition-colors hover:bg-[#c90500]"
               >
                 В каталог
               </Link>
@@ -82,7 +83,10 @@ export default async function Home() {
       <section className="py-10 max-[468px]:pt-4 max-[468px]:pb-6 bg-white">
         <div className="max-w-[1200px] mx-auto px-4">
           <p className="font-['Open_Sans',_Helvetica,_Arial,_sans-serif] text-[16px] font-normal leading-[1.618] text-[#333] text-justify">
-            Фаерлайн — бренд премиальных каминов, биокаминов, электрокаминов и барбекю комплексов. Наше производство отличается своим качеством и стильным дизайном. Каждый наш продукт является истинным произведением искусства, который добавляет уют и элегантность в любое помещение.
+            Фаерлайн — бренд премиальных каминов, биокаминов, электрокаминов и барбекю комплексов.
+            Наше производство отличается своим качеством и стильным дизайном. Каждый наш продукт
+            является истинным произведением искусства, который добавляет уют и элегантность в любое
+            помещение.
           </p>
         </div>
       </section>
