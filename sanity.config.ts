@@ -24,13 +24,19 @@ export default defineConfig({
   schema: {
     types: (_types, context) =>
       schemaTypes.map((schemaType) => {
-        if (schemaType.name !== 'product') return schemaType;
+        if (
+          schemaType.name !== 'product' &&
+          schemaType.name !== 'category' &&
+          schemaType.name !== 'portfolioItem'
+        ) {
+          return schemaType;
+        }
 
         return {
           ...schemaType,
           orderings: [orderRankOrdering],
           fields: [
-            orderRankField({ type: 'product' }),
+            orderRankField({ type: schemaType.name }),
             ...(schemaType.fields ?? []),
           ],
         };

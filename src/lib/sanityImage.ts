@@ -6,7 +6,7 @@ const builder = createImageUrlBuilder(sanityClient);
 /** Asset ref/object accepted by @sanity/image-url */
 export type SanityImageSource = {_id?: string; url?: string};
 
-export type ImageSize = 'card' | 'thumb' | 'gallery' | 'category' | 'drawing';
+export type ImageSize = 'card' | 'thumb' | 'gallery' | 'category' | 'drawing' | 'lightbox';
 
 const SIZE_PRESETS: Record<ImageSize, number> = {
   thumb: 120,
@@ -14,6 +14,7 @@ const SIZE_PRESETS: Record<ImageSize, number> = {
   category: 600,
   gallery: 900,
   drawing: 1200,
+  lightbox: 1600,
 };
 
 export function productImageUrl(

@@ -62,7 +62,7 @@ const CATEGORY_BY_SLUG_QUERY = `*[_type == "category" && slug.current == $slug][
   name,
   "slug": slug.current,
   "imageSource": image.asset->${IMAGE_ASSET},
-  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
+  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(orderRank asc, name asc) {
     "id": _id,
     name,
     "slug": slug.current,
@@ -83,12 +83,12 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
   return sanityClient.fetch(CATEGORY_BY_SLUG_QUERY, {slug});
 }
 
-const CATEGORIES_QUERY = `*[_type == "category" && !defined(parent)] | order(name asc) {
+const CATEGORIES_QUERY = `*[_type == "category" && !defined(parent)] | order(orderRank asc, name asc) {
   "id": _id,
   name,
   "slug": slug.current,
   "imageSource": image.asset->${IMAGE_ASSET},
-  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(name asc) {
+  "subcategories": *[_type == "category" && parent._ref == ^._id] | order(orderRank asc, name asc) {
     "id": _id,
     name,
     "slug": slug.current,
@@ -122,6 +122,22 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
 export async function getProductMeta(slug: string) {
   return sanityClient.fetch(PRODUCT_META_QUERY, {slug});
+}
+
+export interface PortfolioItem {
+  id: string;
+  modelName: string;
+  imageSource?: SanityImageSource;
+}
+
+const PORTFOLIO_QUERY = `*[_type == "portfolioItem"] | order(orderRank asc, modelName asc) {
+  "id": _id,
+  modelName,
+  "imageSource": image.asset->${IMAGE_ASSET}
+}`;
+
+export async function fetchPortfolioItems(): Promise<PortfolioItem[]> {
+  return sanityClient.fetch(PORTFOLIO_QUERY);
 }
 
 export type {SanityImageSource};
