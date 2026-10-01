@@ -54,7 +54,7 @@ export function PortfolioGallery({items}: Props) {
             <button
               type="button"
               onClick={() => setActiveId(item.id)}
-              className="group relative block w-full overflow-hidden bg-[#eceae6] text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e10600]"
+              className="group relative block w-full cursor-pointer overflow-hidden bg-[#eceae6] text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e10600]"
             >
               <div className="aspect-[4/3] w-full overflow-hidden">
                 <img
