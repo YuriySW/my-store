@@ -12,17 +12,30 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'image',
-      title: 'Изображение',
-      type: 'image',
-      options: {hotspot: true},
-      validation: (Rule) => Rule.required(),
+      name: 'images',
+      title: 'Изображения',
+      type: 'array',
+      of: [{type: 'image', options: {hotspot: true}}],
+      options: {
+        layout: 'grid',
+      },
+      description: 'До 10 фото одной модели. Первое — превью в сетке.',
+      validation: (Rule) => Rule.required().min(1).max(10),
     }),
   ],
   preview: {
     select: {
       title: 'modelName',
-      media: 'image',
+      media: 'images.0',
+      count: 'images',
+    },
+    prepare({title, media, count}) {
+      const n = Array.isArray(count) ? count.length : 0
+      return {
+        title: title || 'Без названия',
+        subtitle: n ? `${n} фото` : 'Нет фото',
+        media,
+      }
     },
   },
 })

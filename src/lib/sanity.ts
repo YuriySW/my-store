@@ -127,13 +127,17 @@ export async function getProductMeta(slug: string) {
 export interface PortfolioItem {
   id: string;
   modelName: string;
-  imageSource?: SanityImageSource;
+  imageSources: SanityImageSource[];
 }
 
 const PORTFOLIO_QUERY = `*[_type == "portfolioItem"] | order(orderRank asc, modelName asc) {
   "id": _id,
   modelName,
-  "imageSource": image.asset->${IMAGE_ASSET}
+  "imageSources": select(
+    count(images) > 0 => images[].asset->${IMAGE_ASSET},
+    defined(image.asset) => [image.asset->${IMAGE_ASSET}],
+    []
+  )
 }`;
 
 export async function fetchPortfolioItems(): Promise<PortfolioItem[]> {
