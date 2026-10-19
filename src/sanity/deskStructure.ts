@@ -198,11 +198,26 @@ export const deskStructure: StructureResolver = (S, context) =>
             .filter(`_type == "product" && !defined(category)`),
         ),
       S.divider(),
-      orderableDocumentListDeskItem({
-        type: 'portfolioItem',
-        title: 'Портфолио',
-        id: 'orderable-portfolio',
-        S,
-        context,
-      }),
+      S.listItem()
+        .title('Портфолио')
+        .child(
+          S.list()
+            .title('Портфолио')
+            .items([
+              orderableDocumentListDeskItem({
+                type: 'portfolioItem',
+                title: 'Работы',
+                id: 'orderable-portfolio',
+                S,
+                context,
+              }),
+              orderableDocumentListDeskItem({
+                type: 'portfolioCategory',
+                title: 'Категории',
+                id: 'orderable-portfolio-categories',
+                S,
+                context,
+              }),
+            ]),
+        ),
     ])

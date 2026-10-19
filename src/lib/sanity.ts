@@ -124,15 +124,33 @@ export async function getProductMeta(slug: string) {
   return sanityClient.fetch(PRODUCT_META_QUERY, {slug});
 }
 
+export interface PortfolioCategory {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 export interface PortfolioItem {
   id: string;
   modelName: string;
   imageSources: SanityImageSource[];
+  categoryId: string | null;
+  categorySlug: string | null;
+  categoryName: string | null;
 }
+
+const PORTFOLIO_CATEGORIES_QUERY = `*[_type == "portfolioCategory" && !defined(parent)] | order(orderRank asc, name asc) {
+  "id": _id,
+  name,
+  "slug": slug.current
+}`;
 
 const PORTFOLIO_QUERY = `*[_type == "portfolioItem"] | order(orderRank asc, modelName asc) {
   "id": _id,
   modelName,
+  "categoryId": category->_id,
+  "categorySlug": category->slug.current,
+  "categoryName": category->name,
   "imageSources": select(
     count(images) > 0 => images[].asset->${IMAGE_ASSET},
     defined(image.asset) => [image.asset->${IMAGE_ASSET}],
@@ -140,8 +158,15 @@ const PORTFOLIO_QUERY = `*[_type == "portfolioItem"] | order(orderRank asc, mode
   )
 }`;
 
+/** Без CDN — иначе свежие category/slug после миграции не видны минутами. */
+const portfolioClient = sanityClient.withConfig({useCdn: false});
+
+export async function fetchPortfolioCategories(): Promise<PortfolioCategory[]> {
+  return portfolioClient.fetch(PORTFOLIO_CATEGORIES_QUERY);
+}
+
 export async function fetchPortfolioItems(): Promise<PortfolioItem[]> {
-  return sanityClient.fetch(PORTFOLIO_QUERY);
+  return portfolioClient.fetch(PORTFOLIO_QUERY);
 }
 
 export type {SanityImageSource};

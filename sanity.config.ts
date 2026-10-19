@@ -1,9 +1,9 @@
-import { defineConfig } from 'sanity';
-import { deskTool } from 'sanity/desk';
-import { visionTool } from '@sanity/vision';
-import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list';
-import { schemaTypes } from './src/sanity/schemaTypes';
-import { deskStructure } from './src/sanity/deskStructure';
+import {defineConfig} from 'sanity';
+import {deskTool} from 'sanity/desk';
+import {visionTool} from '@sanity/vision';
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list';
+import {schemaTypes} from './src/sanity/schemaTypes';
+import {deskStructure} from './src/sanity/deskStructure';
 
 export default defineConfig({
   name: 'default',
@@ -15,7 +15,7 @@ export default defineConfig({
   basePath: '/admin',
 
   plugins: [
-    deskTool({ structure: deskStructure }),
+    deskTool({structure: deskStructure}),
     visionTool({
       defaultApiVersion: '2023-05-03', // Устанавливаем стабильную версию
     }),
@@ -27,7 +27,8 @@ export default defineConfig({
         if (
           schemaType.name !== 'product' &&
           schemaType.name !== 'category' &&
-          schemaType.name !== 'portfolioItem'
+          schemaType.name !== 'portfolioItem' &&
+          schemaType.name !== 'portfolioCategory'
         ) {
           return schemaType;
         }
@@ -35,10 +36,7 @@ export default defineConfig({
         return {
           ...schemaType,
           orderings: [orderRankOrdering],
-          fields: [
-            orderRankField({ type: schemaType.name }),
-            ...(schemaType.fields ?? []),
-          ],
+          fields: [orderRankField({type: schemaType.name}), ...(schemaType.fields ?? [])],
         };
       }),
     templates: (prev) => [
@@ -47,18 +45,18 @@ export default defineConfig({
         id: 'subcategory-by-parent',
         title: 'Подкатегория (в выбранной категории)',
         schemaType: 'category',
-        parameters: [{ name: 'parentId', title: 'Parent category id', type: 'string' }],
-        value: ({ parentId }: { parentId: string }) => ({
-          parent: { _type: 'reference', _ref: parentId },
+        parameters: [{name: 'parentId', title: 'Parent category id', type: 'string'}],
+        value: ({parentId}: {parentId: string}) => ({
+          parent: {_type: 'reference', _ref: parentId},
         }),
       },
       {
         id: 'product-by-category',
         title: 'Товар (в выбранной категории)',
         schemaType: 'product',
-        parameters: [{ name: 'categoryId', title: 'Category id', type: 'string' }],
-        value: ({ categoryId }: { categoryId: string }) => ({
-          category: { _type: 'reference', _ref: categoryId },
+        parameters: [{name: 'categoryId', title: 'Category id', type: 'string'}],
+        value: ({categoryId}: {categoryId: string}) => ({
+          category: {_type: 'reference', _ref: categoryId},
         }),
       },
     ],

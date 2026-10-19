@@ -12,6 +12,18 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'category',
+      title: 'Категория',
+      type: 'reference',
+      to: [{type: 'portfolioCategory'}],
+      validation: (Rule) => Rule.required(),
+      description: 'Камины, Барбекю, Биокамины и т.д.',
+      options: {
+        // только основные (без подкатегорий)
+        filter: '!defined(parent)',
+      },
+    }),
+    defineField({
       name: 'images',
       title: 'Изображения',
       type: 'array',
@@ -28,14 +40,17 @@ export default defineType({
       title: 'modelName',
       media: 'images.0',
       count: 'images',
+      category: 'category.name',
     },
-    prepare({title, media, count}) {
+    prepare({title, media, count, category}) {
       const n = Array.isArray(count) ? count.length : 0
+      const bits = [category, n ? `${n} фото` : 'Нет фото'].filter(Boolean)
       return {
         title: title || 'Без названия',
-        subtitle: n ? `${n} фото` : 'Нет фото',
+        subtitle: bits.join(' · '),
         media,
       }
     },
   },
 })
+
